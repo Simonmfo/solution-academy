@@ -563,6 +563,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Gallery Tabs (📸 Prácticas e Instagram / ⭐ Testimonios)
+  const galleryTabs = document.querySelectorAll('[data-gallery-tab]');
+  const panelFotos = document.getElementById('panel-fotos');
+  const panelTestimonios = document.getElementById('panel-testimonios');
+
+  galleryTabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      galleryTabs.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+
+      const target = btn.getAttribute('data-gallery-tab');
+      if (panelFotos && panelTestimonios) {
+        panelFotos.hidden = target !== 'fotos';
+        panelTestimonios.hidden = target !== 'testimonios';
+      }
+    });
+  });
+
+  // Theme Toggle (Light by default like CTU, with Dark Mode switch)
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+
+  themeToggle?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = current === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    if (themeIcon) {
+      themeIcon.textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+  });
+
   // Initial render
   renderCourses();
 });

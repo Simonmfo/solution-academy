@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solution Academy | Escuela Técnica de Maquinaria Pesada, Construcción y Oficios</title>
-  <meta name="description" content="Formación técnica intensiva en Operación de Maquinaria Pesada, Construcción, Steel Framing, Soldadura y Seguridad Industrial. Prácticas reales en campo y certificación con rápida salida laboral." />
-  <meta name="theme-color" content="#09131e" />
+  <title>Solution Academy | Centro de Formación en Maquinaria Pesada, Construcción y Oficios</title>
+  <meta name="description" content="En Solution Academy transformamos tu pasión en profesión. Cursos presenciales con práctica real en operación de maquinaria pesada, construcción y oficios técnicos." />
+  <meta name="theme-color" content="#0d5bd9" />
   <link rel="icon" type="image/jpeg" href="assets/logo-ig.jpg" />
 
   <!-- Google Fonts: Chakra Petch (Industrial Display) + Plus Jakarta Sans (Clean Body) -->
@@ -23,7 +23,7 @@
     <div class="container top-bar__inner">
       <div class="top-bar__badge">
         <span class="pulse-dot"></span>
-        <span>INSCRIPCIONES ABIERTAS — CUPOS LIMITADOS POR COMISIÓN</span>
+        <span>INSCRIPCIONES ABIERTAS — PRÁCTICAS EN MÁQUINA REAL DESDE LA PRIMERA CLASE</span>
       </div>
       <div class="top-bar__links">
         <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="top-bar__link">
@@ -31,15 +31,15 @@
           @solution_academyy
         </a>
         <span class="top-bar__divider">|</span>
-        <a href="#cursos" class="top-bar__link">Certificación Oficial de Capacitación</a>
+        <a href="#cursos" class="top-bar__link">Certificación y Carnet Habilitante</a>
       </div>
     </div>
   </div>
 
-  <!-- Header / Navigation -->
+  <!-- Header / Navigation (CTU structure + Modern Clean White) -->
   <header class="header" id="header">
     <div class="container header__inner">
-      <a href="#" class="logo" aria-label="Solution Academy Inicio">
+      <a href="#inicio" class="logo" aria-label="Solution Academy Inicio">
         <div class="logo__mark">
           <img src="assets/logo-ig.jpg" alt="Logo Solution Academy" class="logo__img" />
         </div>
@@ -50,18 +50,22 @@
       </a>
 
       <nav class="nav" id="nav-menu" aria-label="Navegación principal">
+        <a href="#inicio" class="nav__link">Inicio</a>
         <a href="#cursos" class="nav__link">Cursos</a>
-        <a href="#metodologia" class="nav__link">Metodología</a>
-        <a href="#simulador" class="nav__link">Test Vocacional</a>
-        <a href="#comunidad" class="nav__link">Instagram</a>
+        <a href="#sedes" class="nav__link">Sede y Prácticas</a>
+        <a href="#galeria" class="nav__link">Galería y Testimonios</a>
+        <a href="#nosotros" class="nav__link">Quiénes Somos</a>
         <a href="#faq" class="nav__link">Preguntas</a>
         <a href="#contacto" class="nav__link">Contacto</a>
       </nav>
 
       <div class="header__actions">
-        <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="btn btn--ghost btn--sm" aria-label="Instagram de Solution Academy">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-          <span class="hide-mobile">Instagram</span>
+        <button type="button" class="theme-toggle" id="theme-toggle" title="Cambiar modo claro / oscuro" aria-label="Cambiar modo de color">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="btn btn--outline btn--sm hide-mobile" aria-label="Instagram de Solution Academy">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          <span>Instagram</span>
         </a>
         <a href="#contacto" class="btn btn--primary btn--sm">
           <span>Inscribirme</span>
@@ -77,12 +81,11 @@
   </header>
 
   <main>
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- Hero Section (CTU-style message + Modern Layout) -->
+    <section class="hero" id="inicio">
       <div class="hero__bg">
-        <img src="assets/hero-machinery.png" alt="Entrenamiento en maquinaria pesada y construcción en Solution Academy" class="hero__bg-img" fetchpriority="high" onerror="this.style.display='none'" />
+        <img src="assets/hero-machinery.png" alt="Entrenamiento práctico en maquinaria pesada y construcción en Solution Academy" class="hero__bg-img" fetchpriority="high" onerror="this.style.display='none'" />
         <div class="hero__overlay"></div>
-        <div class="hero__grid-pattern"></div>
       </div>
 
       <div class="container hero__container">
@@ -93,21 +96,21 @@
           </div>
 
           <h1 class="hero__title">
-            TU FUTURO TAMBIÉN SE MANEJA Y <span class="text-highlight">SE CONSTRUYE</span>
+            TU FUTURO TAMBIÉN SE MANEJA Y <span class="text-highlight">SE CONSTRUYE HOY</span>
           </h1>
 
           <p class="hero__subtitle">
-            Cursos presenciales con <strong>práctica real en campo</strong>. Capacitaciones técnicas en operación de maquinaria vial, autoelevadores, construcción en seco, soldadura e instalaciones.
+            En <strong>Solution Academy</strong> transformamos tu pasión en profesión. Entrenamiento presencial y práctico en <strong>maquinaria pesada, logística, construcción y oficios</strong> con rápida salida laboral.
           </p>
 
           <div class="hero__cta-group">
             <a href="#cursos" class="btn btn--primary btn--lg">
-              <span>Explorar Catálogo de Cursos</span>
+              <span>Explorar Cursos</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </a>
             <button type="button" class="btn btn--outline btn--lg" id="hero-whatsapp-btn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-              <span>Consultar por WhatsApp</span>
+              <span>Consultar Cupos y Fechas</span>
             </button>
           </div>
 
@@ -118,11 +121,11 @@
             </div>
             <div class="hero__trust-item">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>Prácticas con equipos reales</span>
+              <span>Clases en máquina real (no simulador)</span>
             </div>
             <div class="hero__trust-item">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>Certificado y Carnet de Operador</span>
+              <span>Diploma y Carnet Habilitante</span>
             </div>
           </div>
         </div>
@@ -130,9 +133,9 @@
         <!-- Hero Right Card: Quick Course Finder -->
         <aside class="hero__card" aria-label="Acceso rápido a áreas de estudio">
           <div class="hero__card-header">
-            <span class="badge badge--amber">SALIDA LABORAL RÁPIDA</span>
-            <h2>Elegí tu Área Técnica</h2>
-            <p>Seleccioná una especialidad para filtrar los programas disponibles:</p>
+            <span class="badge badge--blue">SALIDA LABORAL RÁPIDA</span>
+            <h2>Elegí tu Especialidad</h2>
+            <p>Seleccioná un área técnica para ver los cursos y modalidades:</p>
           </div>
 
           <div class="quick-areas">
@@ -149,7 +152,7 @@
               <div class="quick-area-btn__icon">🏗️</div>
               <div class="quick-area-btn__info">
                 <strong>Construcción y Oficios</strong>
-                <span>Steel Framing, Durlock, Electricidad, Albañilería, Plomería</span>
+                <span>Steel Framing, Durlock, Electricidad, Albañilería Integral</span>
               </div>
               <span class="quick-area-btn__arrow">→</span>
             </a>
@@ -158,7 +161,7 @@
               <div class="quick-area-btn__icon">👨‍🏭</div>
               <div class="quick-area-btn__info">
                 <strong>Soldadura y Seguridad Industrial</strong>
-                <span>Soldadura MIG/TIG/MMA, Mecánica Hidráulica, Higiene y Seguridad</span>
+                <span>Soldadura MIG/TIG/MMA, Mecánica Hidráulica, Prevención</span>
               </div>
               <span class="quick-area-btn__arrow">→</span>
             </a>
@@ -168,15 +171,14 @@
             <div class="ig-mini-banner">
               <div class="ig-mini-banner__left">
                 <span class="ig-dot"></span>
-                <span>Mirá las prácticas reales en vivo</span>
+                <span>Seguinos en nuestro Instagram oficial</span>
               </div>
-              <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer">Ver Instagram ↗</a>
+              <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer">@solution_academyy ↗</a>
             </div>
           </div>
         </aside>
       </div>
 
-      <!-- Caution Hazard Stripe Divider -->
       <div class="hazard-stripe" aria-hidden="true"></div>
     </section>
 
@@ -184,33 +186,33 @@
     <section class="stats-bar" aria-label="Estadísticas de Solution Academy">
       <div class="container stats-bar__grid">
         <div class="stat-item">
-          <span class="stat-item__number">+1.500</span>
-          <span class="stat-item__label">Alumnos Capacitados y Certificados</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-item__number">80%</span>
-          <span class="stat-item__label">Entrenamiento Práctico en Campo</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-item__number">12+</span>
-          <span class="stat-item__label">Especialidades de Alta Demanda</span>
-        </div>
-        <div class="stat-item">
           <span class="stat-item__number">100%</span>
-          <span class="stat-item__label">Enfoque en Inserción Laboral Real</span>
+          <span class="stat-item__label">Prácticas en Máquina y Taller Real</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__number">9+</span>
+          <span class="stat-item__label">Cursos Técnicos de Alta Demanda</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__number">0%</span>
+          <span class="stat-item__label">Experiencia Previa Requerida</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-item__number">Doble</span>
+          <span class="stat-item__label">Diploma + Carnet de Operador</span>
         </div>
       </div>
     </section>
 
-    <!-- Courses Catalog Section -->
+    <!-- Nuestros Cursos Section -->
     <section class="section courses-section" id="cursos">
       <div class="container">
         <div class="section-header">
           <div class="section-header__left">
-            <span class="eyebrow">PROGRAMAS DE FORMACIÓN TÉCNICA</span>
-            <h2 class="section-title">CATÁLOGO DE <span class="text-highlight">CURSOS Y OFICIOS</span></h2>
+            <span class="eyebrow">OFERTA ACADÉMICA</span>
+            <h2 class="section-title">NUESTROS <span class="text-highlight">CURSOS CERTIFICADOS</span></h2>
             <p class="section-desc">
-              Todos nuestros cursos incluyen equipamiento de seguridad (EPP) durante las prácticas, material técnico digital y certificación de aprobación.
+              Formación directa, clara y práctica en equipos reales. Todos los cursos incluyen elementos de protección personal (EPP), manual técnico y evaluación final certificada.
             </p>
           </div>
 
@@ -218,7 +220,7 @@
           <div class="catalog-controls">
             <div class="search-box">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <input type="search" id="course-search" placeholder="Buscar curso (ej. Retroexcavadora, Steel Framing, Soldadura)..." aria-label="Buscar curso" />
+              <input type="search" id="course-search" placeholder="Buscar curso (ej. Retroexcavadora, Autoelevador, Steel Framing)..." aria-label="Buscar curso" />
             </div>
 
             <div class="filter-tabs" role="tablist" aria-label="Filtrar cursos por categoría">
@@ -238,27 +240,167 @@
           </div>
         </div>
 
-        <!-- Course Grid (Populated via JS for rich interactivity & filtering) -->
+        <!-- Course Grid -->
         <div class="courses-grid" id="courses-grid" aria-live="polite"></div>
 
         <!-- Empty Search State -->
         <div class="empty-state" id="empty-state" hidden>
           <div class="empty-state__icon">🔍</div>
           <h3>No encontramos cursos con ese término</h3>
-          <p>Probá buscando otra palabra clave o consultanos directamente por capacitaciones personalizadas para empresas o particulares.</p>
+          <p>Probá buscando otra palabra clave o consultanos directamente por capacitaciones personalizadas.</p>
           <button class="btn btn--outline" id="reset-filters-btn">Ver todos los cursos</button>
         </div>
       </div>
     </section>
 
-    <!-- Methodology / Why Solution Academy -->
-    <section class="section methodology-section" id="metodologia">
+    <!-- Nuestra Sede y Predio de Prácticas (Inspired by CTU "Nuestra Sede") -->
+    <section class="section section--alt" id="sedes">
       <div class="container">
         <div class="section-header section-header--center">
-          <span class="eyebrow">POR QUÉ ELEGIR SOLUTION ACADEMY</span>
-          <h2 class="section-title">ENTRENAMIENTO REAL PARA <span class="text-highlight">TRABAJOS REALES</span></h2>
+          <span class="eyebrow">INFRAESTRUCTURA Y EQUIPAMIENTO</span>
+          <h2 class="section-title">NUESTRA SEDE Y <span class="text-highlight">CAMPOS DE PRÁCTICA</span></h2>
           <p class="section-desc">
-            No somos una academia teórica más. Enseñamos con las herramientas, máquinas y protocolos de seguridad que exigen las empresas constructoras, logísticas y viales hoy.
+            No entrenamos en simuladores: nuestras clases se dictan directamente sobre maquinaria vial, autoelevadores y talleres constructivos equipados.
+          </p>
+        </div>
+
+        <div class="sedes-grid">
+          <article class="sede-card">
+            <div class="sede-card__visual sede-card__visual--1">
+              <span class="sede-card__tag">PREDIO VIAL</span>
+            </div>
+            <div class="sede-card__body">
+              <h3>Campo de Entrenamiento en Maquinaria</h3>
+              <p>Terreno amplio acondicionado para maniobras reales de zanjeo, excavación, movimiento de suelos, nivelación y carga con retroexcavadora y pala frontal.</p>
+            </div>
+          </article>
+
+          <article class="sede-card">
+            <div class="sede-card__visual sede-card__visual--2">
+              <span class="sede-card__tag">CIRCUITO LOGÍSTICO</span>
+            </div>
+            <div class="sede-card__body">
+              <h3>Área de Autoelevadores y Estibaje</h3>
+              <p>Circuito técnico con pallets, cargas reales, maniobras en pasillos reducidos y prácticas de elevación segura bajo estándares de seguridad laboral.</p>
+            </div>
+          </article>
+
+          <article class="sede-card">
+            <div class="sede-card__visual sede-card__visual--3">
+              <span class="sede-card__tag">AULAS TALLER</span>
+            </div>
+            <div class="sede-card__body">
+              <h3>Taller de Construcción y Soldadura</h3>
+              <p>Bancos de trabajo equipados con perfilería Steel Framing, tableros eléctricos de prueba, máquinas soldadoras MIG/TIG/MMA y herramientas profesionales.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galería y Testimonios con Pestañas (CTU-style Tabs: 📸 Fotos / 🎥 Testimonios) -->
+    <section class="section" id="galeria">
+      <div class="container">
+        <div class="section-header section-header--center">
+          <span class="eyebrow">ALUMNOS Y PRÁCTICAS REALES</span>
+          <h2 class="section-title">NUESTRA <span class="text-highlight">GALERÍA Y TESTIMONIOS</span></h2>
+          <p class="section-desc">
+            Conocé cómo entrenan nuestros estudiantes en cada jornada práctica y las experiencias de quienes ya se capacitaron en Solution Academy.
+          </p>
+
+          <div class="gallery-tabs" role="tablist">
+            <button type="button" class="gallery-tab-btn active" data-gallery-tab="fotos" role="tab" aria-selected="true">
+              📸 Prácticas e Instagram
+            </button>
+            <button type="button" class="gallery-tab-btn" data-gallery-tab="testimonios" role="tab" aria-selected="false">
+              ⭐ Testimonios de Egresados
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 1: Fotos / Instagram -->
+        <div class="gallery-panel" id="panel-fotos">
+          <div class="ig-grid">
+            <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="ig-card">
+              <div class="ig-card__visual ig-card__visual--1">
+                <span class="ig-card__badge">PRÁCTICA EN CAMPO</span>
+                <div class="ig-card__icon">🚜</div>
+              </div>
+              <div class="ig-card__body">
+                <span class="ig-card__tag">@solution_academyy</span>
+                <h4>Maniobras reales de excavación, zanjeo y control hidráulico con Retroexcavadora</h4>
+                <span class="ig-card__cta">Ver fotos y videos en Instagram ↗</span>
+              </div>
+            </a>
+
+            <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="ig-card">
+              <div class="ig-card__visual ig-card__visual--2">
+                <span class="ig-card__badge">CONSTRUCCIÓN Y OFICIOS</span>
+                <div class="ig-card__icon">🏗️</div>
+              </div>
+              <div class="ig-card__body">
+                <span class="ig-card__tag">@solution_academyy</span>
+                <h4>Montaje de estructuras en Steel Framing, instalaciones y prácticas en taller</h4>
+                <span class="ig-card__cta">Ver fotos y videos en Instagram ↗</span>
+              </div>
+            </a>
+
+            <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="ig-card">
+              <div class="ig-card__visual ig-card__visual--3">
+                <span class="ig-card__badge">CERTIFICACIÓN</span>
+                <div class="ig-card__icon">🎓</div>
+              </div>
+              <div class="ig-card__body">
+                <span class="ig-card__tag">@solution_academyy</span>
+                <h4>Nuevos operadores graduados recibiendo su diploma y carnet técnico habilitante</h4>
+                <span class="ig-card__cta">Ver fotos y videos en Instagram ↗</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tab 2: Testimonios -->
+        <div class="gallery-panel" id="panel-testimonios" hidden>
+          <div class="testimonials-grid">
+            <blockquote class="testimonial-card">
+              <div class="testimonial-card__stars" aria-label="5 de 5 estrellas">★★★★★</div>
+              <p>"Hice el curso de Operador de Autoelevador y Retroexcavadora sin haberme subido nunca a una máquina. Los instructores te explican paso a paso en la máquina real y al mes conseguí trabajo en logística."</p>
+              <footer>
+                <strong>Matías R.</strong>
+                <span>Egresado — Operación de Maquinaria</span>
+              </footer>
+            </blockquote>
+
+            <blockquote class="testimonial-card">
+              <div class="testimonial-card__stars" aria-label="5 de 5 estrellas">★★★★★</div>
+              <p>"Excelente el curso de Steel Framing y Construcción en Seco. Todo 100% práctico con herramientas reales, aprendés a calcular materiales y presupuestar obras completas."</p>
+              <footer>
+                <strong>Lucas G.</strong>
+                <span>Egresado — Construcción y Oficios</span>
+              </footer>
+            </blockquote>
+
+            <blockquote class="testimonial-card">
+              <div class="testimonial-card__stars" aria-label="5 de 5 estrellas">★★★★★</div>
+              <p>"Me anoté en Soldadura e Instalaciones Eléctricas para sumar oficios y trabajar por mi cuenta. Muy buena atención de todo el equipo de Solution Academy y horarios súper accesibles."</p>
+              <footer>
+                <strong>Federico M.</strong>
+                <span>Egresado — Soldadura Industrial</span>
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiénes Somos & Método Solution Academy (Inspired by CTU "¿Quiénes Somos?") -->
+    <section class="section section--alt" id="nosotros">
+      <div class="container">
+        <div class="section-header section-header--center">
+          <span class="eyebrow">INSTITUCIONAL Y METODOLOGÍA</span>
+          <h2 class="section-title">¿QUIÉNES SOMOS? EL <span class="text-highlight">MÉTODO SOLUTION ACADEMY</span></h2>
+          <p class="section-desc">
+            Bienvenidos a <strong>Solution Academy</strong>, centro especializado en la capacitación de operadores de maquinaria vial, logística, construcción y oficios técnicos. Desarrollamos un método directo, claro y <strong>fundamentalmente práctico</strong> para que cada estudiante salga listo para el mercado laboral.
           </p>
         </div>
 
@@ -266,78 +408,78 @@
           <article class="step-card">
             <div class="step-card__num">01</div>
             <div class="step-card__icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0d5bd9" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
             </div>
-            <h3>Nivelación Técnica y Seguridad</h3>
-            <p>Aprendé desde cero el reconocimiento de componentes, mantenimiento preventivo diario (check-list pre-operacional) y normas de seguridad en obra antes de subir al equipo o iniciar el taller.</p>
+            <h3>Nivelación Desde Cero</h3>
+            <p>No necesitás experiencia previa. Empezamos reconociendo cada mando, sistema hidráulico, check-list preventivo y normativa de seguridad vial y laboral.</p>
           </article>
 
           <article class="step-card">
             <div class="step-card__num">02</div>
             <div class="step-card__icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0d5bd9" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
             </div>
-            <h3>Práctica Intensiva en Predio y Taller</h3>
-            <p>Maniobras reales de excavación, zanjeo, carga de camiones, estibaje en altura con autoelevador, montaje de perfiles Steel Framing, tabiquería y cordones de soldadura bajo supervisión 1 a 1.</p>
+            <h3>Entrenamiento en Máquina Real</h3>
+            <p>Prácticas presenciales en terreno y taller bajo supervisión personalizada de instructores especializados en retroexcavadora, elevadores, construcción y soldadura.</p>
           </article>
 
           <article class="step-card">
             <div class="step-card__num">03</div>
             <div class="step-card__icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0d5bd9" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
             </div>
-            <h3>Certificación y Carnet Habilitante</h3>
-            <p>Al aprobar la evaluación práctica final, recibís tu Diploma Certificado y Credencial Técnica con código de validación para presentar en constructoras, depósitos logísticos y contratistas.</p>
+            <h3>Diploma y Carnet Habilitante</h3>
+            <p>Entregamos Diploma Certificado de capacitación técnica y Carnet de Operador / Especialista acreditando las competencias adquiridas.</p>
           </article>
 
           <article class="step-card">
             <div class="step-card__num">04</div>
             <div class="step-card__icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0d5bd9" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
             </div>
-            <h3>Bolsa de Empleo y Emprendimiento</h3>
-            <p>Te asesoramos en el armado de tu CV técnico, presupuestos de mano de obra para clientes propios y compartimos búsquedas activas de empresas aliadas del sector.</p>
+            <h3>Impulso Laboral y Financiación</h3>
+            <p>Facilidades de pago en cuotas y orientación para insertarte en empresas viales, logísticas, constructoras o emprender tu propio servicio técnico.</p>
           </article>
         </div>
 
-        <!-- B2B Banner for Companies -->
+        <!-- Corporate / B2B Banner -->
         <div class="b2b-banner">
           <div class="b2b-banner__content">
-            <span class="badge badge--dark">DIVISIÓN EMPRESAS E INSTITUCIONES</span>
-            <h3>¿Necesitás capacitar o certificar al personal de tu empresa u obra?</h3>
-            <p>Dictamos capacitaciones In-Company, renovación de carnets de autoelevador (Res. SRT 960/15), evaluación de operadores viales y protocolos de seguridad en planta.</p>
+            <span class="badge badge--blue">CONVENIOS CON EMPRESAS E INSTITUCIONES</span>
+            <h3>¿Buscás capacitar y certificar al personal de tu empresa u obra?</h3>
+            <p>Brindamos entrenamientos In-Company, evaluación práctica de operadores de maquinaria vial y autoelevadores, y cursos de seguridad laboral adaptados a cada organización.</p>
           </div>
           <div class="b2b-banner__action">
-            <button type="button" class="btn btn--primary" data-whatsapp-msg="Hola Solution Academy! Me contacto para solicitar presupuesto de capacitación In-Company para nuestra empresa.">
-              Solicitar Propuesta Corporativa
+            <button type="button" class="btn btn--primary" data-whatsapp-msg="Hola Solution Academy! Nos gustaría recibir información sobre capacitaciones para personal de nuestra empresa.">
+              Consultar Convenios Empresas
             </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Interactive Career / Course Recommender ("Test Vocacional Técnico") -->
+    <!-- Interactive Career / Course Recommender -->
     <section class="section advisor-section" id="simulador">
       <div class="container">
         <div class="advisor-box">
           <div class="advisor-box__intro">
             <span class="eyebrow">ORIENTACIÓN RÁPIDA EN 30 SEGUNDOS</span>
-            <h2 class="section-title">¿NO SABÉS CON QUÉ CURSO <span class="text-highlight">EMPEZAR</span>?</h2>
-            <p>Respondé estas 3 preguntas rápidas según tu objetivo laboral y te recomendamos la capacitación ideal para tu perfil.</p>
+            <h2 class="section-title">¿NO SABÉS QUÉ CURSO <span class="text-highlight">ELEGIR</span>?</h2>
+            <p>Respondé estas 2 preguntas según el trabajo que buscás y te recomendamos la capacitación ideal para empezar hoy.</p>
 
             <div class="advisor-perks">
               <div class="advisor-perk">
                 <span>🎯</span>
                 <div>
-                  <strong>Recomendación a medida</strong>
-                  <small>Según el tipo de trabajo que buscás</small>
+                  <strong>Recomendación personalizada</strong>
+                  <small>Orientada a rápida salida laboral</small>
                 </div>
               </div>
               <div class="advisor-perk">
-                <span>⏱️</span>
+                <span>💳</span>
                 <div>
-                  <strong>Modalidades flexibles</strong>
-                  <small>Intensivos de fin de semana o semanales</small>
+                  <strong>Consultá por financiación</strong>
+                  <small>Reserva de cupo accesible y facilidades de pago</small>
                 </div>
               </div>
             </div>
@@ -346,35 +488,35 @@
           <div class="advisor-box__quiz" id="quiz-container">
             <div class="quiz-step" id="quiz-form">
               <div class="quiz-group">
-                <label class="quiz-label">1. ¿Dónde te gustaría trabajar principalmente?</label>
+                <label class="quiz-label">1. ¿En qué sector te gustaría trabajar?</label>
                 <div class="quiz-options" data-question="ambiente">
-                  <button type="button" class="quiz-option active" data-value="vial">🚜 Obras viales, movimiento de suelo y canteras</button>
-                  <button type="button" class="quiz-option" data-value="logistica">📦 Centros logísticos, depósitos, puertos y fábricas</button>
-                  <button type="button" class="quiz-option" data-value="obra">🏠 Construcción civil, reformas y obras particulares</button>
-                  <button type="button" class="quiz-option" data-value="taller">⚡ Industria metalúrgica, mantenimiento y montaje</button>
+                  <button type="button" class="quiz-option active" data-value="vial">🚜 Obras viales, movimiento de suelo y retroexcavadora</button>
+                  <button type="button" class="quiz-option" data-value="logistica">📦 Logística, depósitos, fábricas y autoelevadores</button>
+                  <button type="button" class="quiz-option" data-value="obra">🏠 Construcción en seco, reformas e instalaciones</button>
+                  <button type="button" class="quiz-option" data-value="taller">⚡ Soldadura metalúrgica y mantenimiento industrial</button>
                 </div>
               </div>
 
               <div class="quiz-group">
-                <label class="quiz-label">2. ¿Cuál es tu meta principal a corto plazo?</label>
+                <label class="quiz-label">2. ¿Cuál es tu objetivo principal?</label>
                 <div class="quiz-options" data-question="meta">
-                  <button type="button" class="quiz-option active" data-value="empleo">Entrar a trabajar en relación de dependencia rápido</button>
-                  <button type="button" class="quiz-option" data-value="independiente">Trabajar por mi cuenta / tener mis propios clientes</button>
+                  <button type="button" class="quiz-option active" data-value="empleo">Conseguir empleo en empresas del sector</button>
+                  <button type="button" class="quiz-option" data-value="independiente">Trabajar de forma independiente / obras propias</button>
                 </div>
               </div>
 
               <button type="button" class="btn btn--primary btn--full" id="run-advisor-btn">
-                Ver Curso Recomendado para Mí →
+                Ver Curso Recomendado →
               </button>
             </div>
 
             <div class="quiz-result" id="quiz-result" hidden>
-              <span class="badge badge--amber">RECOMENDACIÓN IDEAL PARA TU PERFIL</span>
-              <h3 id="result-title">Operador de Retroexcavadora y Pala Cargadora</h3>
+              <span class="badge badge--blue">CURSO IDEAL PARA TU PERFIL</span>
+              <h3 id="result-title">Operador de Retroexcavadora</h3>
               <p id="result-desc"></p>
               <div class="quiz-result__meta" id="result-meta"></div>
               <div class="quiz-result__actions">
-                <button type="button" class="btn btn--primary" id="result-wa-btn">Consultar Cupos por WhatsApp</button>
+                <button type="button" class="btn btn--primary" id="result-wa-btn">Consultar Cupos y Financiación</button>
                 <button type="button" class="btn btn--ghost" id="reset-quiz-btn">Volver a elegir</button>
               </div>
             </div>
@@ -383,151 +525,53 @@
       </div>
     </section>
 
-    <!-- Instagram Community & Real Practices Section -->
-    <section class="section community-section" id="comunidad">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <span class="eyebrow">COMUNIDAD EN ACCIÓN</span>
-            <h2 class="section-title">VIVÍ EL DÍA A DÍA EN <span class="text-highlight">@SOLUTION_ACADEMYY</span></h2>
-            <p class="section-desc">
-              Seguinos en Instagram para ver videos de las prácticas en vivo, entregas de certificados, tips técnicos y nuevas fechas de inicio.
-            </p>
-          </div>
-          <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="btn btn--outline">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-            <span>Seguir en Instagram</span>
-          </a>
-        </div>
-
-        <!-- Instagram Visual Showcase Cards -->
-        <div class="ig-grid">
-          <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="ig-card">
-            <div class="ig-card__visual ig-card__visual--1">
-              <span class="ig-card__badge">REEL DESTACADO</span>
-              <div class="ig-card__icon">🚜</div>
-            </div>
-            <div class="ig-card__body">
-              <span class="ig-card__tag">#MaquinariaPesada</span>
-              <h4>Prácticas de excavación, zanjeo y nivelación con Retroexcavadora en predio propio</h4>
-              <span class="ig-card__cta">Ver en @solution_academyy ↗</span>
-            </div>
-          </a>
-
-          <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="ig-card">
-            <div class="ig-card__visual ig-card__visual--2">
-              <span class="ig-card__badge">TALLER EN VIVO</span>
-              <div class="ig-card__icon">🏗️</div>
-            </div>
-            <div class="ig-card__body">
-              <span class="ig-card__tag">#ConstruccionEnSeco</span>
-              <h4>Armado de paneles estructurales en Steel Framing y emplacado Durlock paso a paso</h4>
-              <span class="ig-card__cta">Ver en @solution_academyy ↗</span>
-            </div>
-          </a>
-
-          <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="ig-card">
-            <div class="ig-card__visual ig-card__visual--3">
-              <span class="ig-card__badge">EGRESADOS</span>
-              <div class="ig-card__icon">🎓</div>
-            </div>
-            <div class="ig-card__body">
-              <span class="ig-card__tag">#CertificacionTecnica</span>
-              <h4>Entrega de diplomas y carnets de operador a la nueva camada de profesionales</h4>
-              <span class="ig-card__cta">Ver en @solution_academyy ↗</span>
-            </div>
-          </a>
-        </div>
-
-        <!-- Student Testimonials -->
-        <div class="testimonials-grid">
-          <blockquote class="testimonial-card">
-            <div class="testimonial-card__stars" aria-label="5 de 5 estrellas">★★★★★</div>
-            <p>"Hice el curso de Operador de Autoelevador y Retroexcavadora sin haberme subido nunca a una máquina. Los instructores te tienen toda la paciencia y al mes de terminar conseguí puesto en un parque logístico."</p>
-            <footer>
-              <strong>Matías R.</strong>
-              <span>Egresado — Operación de Maquinaria</span>
-            </footer>
-          </blockquote>
-
-          <blockquote class="testimonial-card">
-            <div class="testimonial-card__stars" aria-label="5 de 5 estrellas">★★★★★</div>
-            <p>"Excelente el taller de Steel Framing y Construcción en Seco. Todo 100% práctico con herramientas reales, aprendés a calcular materiales y presupuestar obras completas."</p>
-            <footer>
-              <strong>Lucas G.</strong>
-              <span>Egresado — Construcción y Oficios</span>
-            </footer>
-          </blockquote>
-
-          <blockquote class="testimonial-card">
-            <div class="testimonial-card__stars" aria-label="5 de 5 estrellas">★★★★★</div>
-            <p>"Me anoté en Soldadura e Instalaciones Eléctricas para sumar oficios y trabajar por mi cuenta. Muy buena onda todo el equipo de Solution Academy y las clases súper claras."</p>
-            <footer>
-              <strong>Federico M.</strong>
-              <span>Egresado — Soldadura Industrial</span>
-            </footer>
-          </blockquote>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="section faq-section" id="faq">
+    <!-- FAQ Section (Aligned with CTU key questions + Solution Academy details) -->
+    <section class="section section--alt faq-section" id="faq">
       <div class="container faq-container">
         <div class="section-header section-header--center">
           <span class="eyebrow">DUDAS FRECUENTES</span>
           <h2 class="section-title">PREGUNTAS <span class="text-highlight">FRECUENTES</span></h2>
-          <p class="section-desc">Todo lo que necesitás saber antes de reservar tu vacante en Solution Academy.</p>
+          <p class="section-desc">Respuestas rápidas a las consultas más habituales de nuestros futuros alumnos.</p>
         </div>
 
         <div class="faq-list">
           <details class="faq-item" open>
             <summary class="faq-question">
-              <span>¿Necesito tener experiencia previa o secundario completo para anotarme?</span>
+              <span>¿Necesito tener experiencia previa para inscribirme?</span>
               <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-              <p>No necesitás experiencia previa ni estudios secundarios completos. Todos nuestros cursos empiezan desde las bases técnicas y de seguridad para que cualquier persona mayor de 18 años (o desde 16 años con autorización en talleres de oficios) pueda aprender el oficio desde cero.</p>
+              <p>No necesitás ningún tipo de experiencia ni conocimiento previo. Todas nuestras capacitaciones empiezan desde cero, acompañándote paso a paso tanto en la teoría de seguridad como en la práctica real.</p>
             </div>
           </details>
 
           <details class="faq-item">
             <summary class="faq-question">
-              <span>¿Cómo son las prácticas con maquinaria pesada y herramientas?</span>
+              <span>¿Las clases de maquinaria son en simulador o en máquina real?</span>
               <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-              <p>Las prácticas se realizan con máquinas e insumos reales en nuestro predio de entrenamiento y talleres equipados. Cada alumno tiene su turno de maniobra individual en cabina acompañado por el instructor, practicando excavación, carga, traslado y estacionamiento seguro.</p>
+              <p><strong>Todas nuestras clases prácticas se realizan en máquina real</strong> y talleres equipados. Creemos que la única forma de salir preparado para el trabajo real es operando el equipo en terreno bajo supervisión de un instructor.</p>
             </div>
           </details>
 
           <details class="faq-item">
             <summary class="faq-question">
-              <span>¿Qué certificación entregan al finalizar el curso?</span>
+              <span>¿Entregan certificado y carnet al finalizar?</span>
               <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-              <p>Al aprobar el curso recibís el <strong>Certificado de Capacitación Técnica de Solution Academy</strong> junto con la <strong>Credencial / Carnet de Operador o Especialista</strong>, donde constan las horas prácticas, el temario técnico aprobado y tus datos para acreditar tu idoneidad ante empleadores.</p>
+              <p>Sí, al aprobar el curso entregamos el <strong>Diploma Certificado de Solution Academy</strong> y la <strong>Credencial / Carnet Técnico de Operador</strong> con constancia de capacitación en seguridad laboral y manejo operativo.</p>
             </div>
           </details>
 
           <details class="faq-item">
             <summary class="faq-question">
-              <span>¿Qué días y horarios se cursa? ¿Hay modalidad de fin de semana?</span>
+              <span>¿Puedo financiar el curso o abonar en cuotas?</span>
               <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-              <p>Sí, contamos con comisiones entre semana (turnos mañana, tarde y vespertino) y <strong>jornadas intensivas los días sábados</strong> pensadas especialmente para quienes trabajan durante la semana o viajan desde otras localidades.</p>
-            </div>
-          </details>
-
-          <details class="faq-item">
-            <summary class="faq-question">
-              <span>¿Cómo me inscribo y qué medios de pago aceptan?</span>
-              <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-              <p>Podés reservar tu cupo con una seña mínima por transferencia bancaria, Mercado Pago, efectivo o tarjetas. Completá el formulario de contacto al pie de esta página o escribinos a nuestro Instagram <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer">@solution_academyy</a> para recibir el cronograma actualizado de inicios.</p>
+              <p>¡Sí! Contamos con reserva de cupo accesible, financiación durante la cursada y pagos por transferencia, efectivo, Mercado Pago o tarjetas. Consultanos para conocer las promociones vigentes de esta semana.</p>
             </div>
           </details>
         </div>
@@ -539,40 +583,40 @@
       <div class="container">
         <div class="contact-grid">
           <div class="contact-info">
-            <span class="eyebrow">INSCRIPCIONES Y ASESORAMIENTO</span>
-            <h2 class="section-title"> ASEGURÁ TU CUPO EN LA <span class="text-highlight">PRÓXIMA COMISIÓN</span></h2>
+            <span class="eyebrow">INSCRIPCIONES Y FECHAS</span>
+            <h2 class="section-title">CONSULTÁ POR <span class="text-highlight">CUPOS Y PRÓXIMOS INICIOS</span></h2>
             <p class="contact-info__desc">
-              Completá tus datos y el curso de tu interés. Te enviaremos al instante el programa completo, fechas de inicio, horarios disponibles y promociones vigentes.
+              Dejanos tus datos y el curso que te interesa. Un asesor de <strong>Solution Academy</strong> te enviará el programa completo, opciones de pago y los horarios disponibles.
             </p>
 
             <div class="contact-cards">
               <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="contact-channel-card">
                 <div class="contact-channel-card__icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0d5bd9" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                 </div>
                 <div>
                   <strong>Instagram Oficial</strong>
-                  <span>@solution_academyy — Respuesta rápida por MD</span>
+                  <span>@solution_academyy — Escribinos por Mensaje Directo</span>
                 </div>
               </a>
 
               <div class="contact-channel-card">
                 <div class="contact-channel-card__icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0d5bd9" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 </div>
                 <div>
-                  <strong>Horarios de Atención y Prácticas</strong>
-                  <span>Lunes a Sábados de 08:30 a 19:30 hs</span>
+                  <strong>Horarios de Cursada Flexibles</strong>
+                  <span>Comisiones semanales e intensivos de fin de semana</span>
                 </div>
               </div>
 
               <div class="contact-channel-card">
                 <div class="contact-channel-card__icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0d5bd9" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 </div>
                 <div>
-                  <strong>Modalidad Presencial y Semi-Presencial</strong>
-                  <span>Predio de prácticas viales y aulas taller equipadas</span>
+                  <strong>Clases Presenciales con Práctica Real</strong>
+                  <span>Entrenamiento directo en campo y aulas taller</span>
                 </div>
               </div>
             </div>
@@ -581,8 +625,8 @@
           <!-- Interactive Inscription Form -->
           <div class="contact-form-card">
             <form id="inscription-form" class="inscription-form">
-              <h3>Solicitar Información e Inscripción</h3>
-              <p>Recibí el temario y aranceles directamente en tu WhatsApp o Instagram.</p>
+              <h3>Solicitar Cupo e Información</h3>
+              <p>Completá el formulario para recibir aranceles, promociones y fechas por WhatsApp.</p>
 
               <div class="form-group">
                 <label for="student-name">Nombre y Apellido *</label>
@@ -591,15 +635,15 @@
 
               <div class="form-row">
                 <div class="form-group">
-                  <label for="student-phone">Teléfono / WhatsApp *</label>
-                  <input type="tel" id="student-phone" name="phone" required placeholder="Ej. 11 2345-6789" />
+                  <label for="student-phone">Celular / WhatsApp *</label>
+                  <input type="tel" id="student-phone" name="phone" required placeholder="Ej. 099 123 456 / 11 2345 6789" />
                 </div>
                 <div class="form-group">
-                  <label for="student-schedule">Disponibilidad preferida</label>
+                  <label for="student-schedule">Modalidad / Horario preferido</label>
                   <select id="student-schedule" name="schedule">
-                    <option value="Sábados Intensivo">Sábados (Intensivo)</option>
-                    <option value="Semana - Turno Mañana">Semana (Turno Mañana)</option>
-                    <option value="Semana - Turno Tarde/Noche">Semana (Turno Tarde/Noche)</option>
+                    <option value="Sábados Intensivo">Sábados (Jornada Intensiva)</option>
+                    <option value="Semana - Turno Mañana">Entre Semana (Mañana)</option>
+                    <option value="Semana - Turno Tarde">Entre Semana (Tarde)</option>
                     <option value="Capacitación para Empresa">Capacitación para Empresa</option>
                   </select>
                 </div>
@@ -629,13 +673,13 @@
 
               <div class="form-group">
                 <label for="student-message">Consulta adicional (opcional)</label>
-                <textarea id="student-message" name="message" rows="2" placeholder="¿Tenés alguna duda sobre fechas, costos o requisitos?"></textarea>
+                <textarea id="student-message" name="message" rows="2" placeholder="Consultá por financiación en cuotas, fechas de inicio o requisitos..."></textarea>
               </div>
 
               <div class="form-actions">
                 <button type="submit" class="btn btn--primary btn--full btn--lg">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                  <span>Enviar Solicitud de Inscripción</span>
+                  <span>Consultar Cupos por WhatsApp</span>
                 </button>
               </div>
             </form>
@@ -647,10 +691,9 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="hazard-stripe" aria-hidden="true"></div>
     <div class="container footer__grid">
       <div class="footer__brand">
-        <a href="#" class="logo">
+        <a href="#inicio" class="logo">
           <div class="logo__mark">
             <img src="assets/logo-ig.jpg" alt="Logo Solution Academy" class="logo__img" />
           </div>
@@ -665,21 +708,22 @@
       </div>
 
       <div class="footer__col">
-        <h4>Áreas de Formación</h4>
+        <h4>Cursos Destacados</h4>
         <ul>
-          <li><a href="#cursos" data-JumpFilter="maquinaria">Operación de Maquinaria Pesada</a></li>
-          <li><a href="#cursos" data-JumpFilter="construccion">Construcción y Oficios</a></li>
-          <li><a href="#cursos" data-JumpFilter="industrial">Soldadura y Seguridad Industrial</a></li>
-          <li><a href="#contacto">Capacitaciones para Empresas</a></li>
+          <li><a href="#cursos" data-JumpFilter="maquinaria">Operador de Retroexcavadora</a></li>
+          <li><a href="#cursos" data-JumpFilter="maquinaria">Operador de Autoelevador (Clark)</a></li>
+          <li><a href="#cursos" data-JumpFilter="construccion">Construcción en Seco y Steel Framing</a></li>
+          <li><a href="#cursos" data-JumpFilter="industrial">Soldadura Industrial y Seguridad</a></li>
         </ul>
       </div>
 
       <div class="footer__col">
-        <h4>Enlaces Rápidos</h4>
+        <h4>Menú Institucional</h4>
         <ul>
-          <li><a href="#metodologia">Nuestra Metodología</a></li>
-          <li><a href="#simulador">Test Vocacional Técnico</a></li>
-          <li><a href="#faq">Preguntas Frecuentes</a></li>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#sedes">Sede y Prácticas</a></li>
+          <li><a href="#galeria">Galería y Testimonios</a></li>
+          <li><a href="#nosotros">Quiénes Somos</a></li>
           <li><a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer">Instagram @solution_academyy</a></li>
         </ul>
       </div>
@@ -696,7 +740,7 @@
     <div class="course-modal__inner">
       <div class="course-modal__header">
         <div>
-          <span class="badge badge--amber" id="modal-course-category">MAQUINARIA PESADA</span>
+          <span class="badge badge--blue" id="modal-course-category">MAQUINARIA PESADA</span>
           <h3 id="modal-course-title">Nombre del Curso</h3>
         </div>
         <button type="button" class="modal-close-btn" id="close-modal-btn" aria-label="Cerrar ventana">✕</button>
@@ -708,7 +752,7 @@
         <div class="course-modal__specs" id="modal-course-specs"></div>
 
         <div class="course-modal__section">
-          <h4>📋 Temario y Módulos Prácticos</h4>
+          <h4>📋 Programa y Prácticas en Terreno</h4>
           <ul class="syllabus-list" id="modal-course-syllabus"></ul>
         </div>
 
@@ -716,27 +760,31 @@
           <h4>💼 Salida Laboral</h4>
           <p id="modal-course-career"></p>
         </div>
+
+        <div class="promo-highlight">
+          <strong>💡 Financiación y Certificación Incluidas:</strong> Consultá por reserva de cupo con seña mínima, facilidades de pago en cuotas y entrega de Diploma + Carnet Habilitante.
+        </div>
       </div>
 
       <div class="course-modal__footer">
         <button type="button" class="btn btn--primary btn--lg" id="modal-inscribe-btn">
-          Inscribirme en este Curso →
+          Inscribirme / Consultar Financiación →
         </button>
         <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="btn btn--outline">
-          Consultar por Instagram
+          Ver en Instagram
         </a>
       </div>
     </div>
   </dialog>
 
-  <!-- Floating Action Button (WhatsApp / Instagram Quick Contact) -->
+  <!-- Floating Action Button (WhatsApp Green + Instagram) -->
   <div class="floating-cta">
     <a href="https://www.instagram.com/solution_academyy/" target="_blank" rel="noopener noreferrer" class="fab fab--ig" title="Ver Instagram @solution_academyy" aria-label="Instagram de Solution Academy">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
     </a>
-    <button type="button" class="fab fab--wa" id="floating-wa-btn" title="Consultar inscripción" aria-label="Consultar inscripción">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-      <span>Inscripciones</span>
+    <button type="button" class="fab fab--wa" id="floating-wa-btn" title="Consultar por WhatsApp" aria-label="Consultar por WhatsApp">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+      <span>WhatsApp</span>
     </button>
   </div>
 
@@ -744,4 +792,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-
