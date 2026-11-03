@@ -1,0 +1,11 @@
+{
+  "name": "solution-academy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio web oficial de Solution Academy (@solution_academyy) - Capacitamos, Inspiramos, Transformamos",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  }
+}
+
