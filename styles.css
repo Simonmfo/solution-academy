@@ -199,50 +199,51 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
+  height: 104px;
   gap: 1.25rem;
 }
 
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.9rem;
 }
 
 .logo__mark {
-  width: 58px;
-  height: 58px;
-  border-radius: 12px;
+  width: 88px;
+  height: 88px;
+  border-radius: 14px;
   background: #ffffff;
-  border: 1.5px solid var(--border-subtle);
+  border: 2px solid var(--blue-border);
   display: grid;
   place-items: center;
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(13, 27, 42, 0.08);
+  box-shadow: 0 6px 18px rgba(13, 27, 42, 0.1);
   flex-shrink: 0;
-  padding: 2px;
+  padding: 3px;
 }
 
 .logo__mark--lg {
-  width: 68px;
-  height: 68px;
+  width: 112px;
+  height: 112px;
 }
 
 .logo__img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transform: scale(1.12);
 }
 
 .about-logo-badge {
-  width: 148px;
-  height: 148px;
+  width: 230px;
+  height: 230px;
   background: #ffffff;
-  border-radius: 22px;
-  padding: 10px;
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-card);
-  margin-bottom: 0.35rem;
+  border-radius: 26px;
+  padding: 12px;
+  border: 2px solid var(--blue-border);
+  box-shadow: var(--shadow-hover);
+  margin-bottom: 0.75rem;
   display: grid;
   place-items: center;
 }
@@ -251,6 +252,7 @@ textarea {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transform: scale(1.08);
 }
 
 .logo__text {
@@ -262,7 +264,7 @@ textarea {
 .logo__brand {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.32rem;
+  font-size: 1.55rem;
   letter-spacing: 0.08em;
   color: var(--navy-brand);
 }
@@ -270,10 +272,10 @@ textarea {
 .logo__sub {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.72rem;
-  letter-spacing: 0.3em;
+  font-size: 0.82rem;
+  letter-spacing: 0.32em;
   color: var(--blue-primary);
-  margin-top: 3px;
+  margin-top: 4px;
 }
 
 .nav {
@@ -1913,7 +1915,7 @@ a.contact-channel-card:hover {
 
   .nav {
     position: fixed;
-    top: 80px;
+    top: 104px;
     left: 0;
     right: 0;
     background: var(--bg-card);
