@@ -8,10 +8,12 @@ const ACADEMY_CONFIG = {
   // If left empty, clicking WhatsApp buttons smoothly scrolls and pre-fills the inscription form.
   whatsappNumber: '',
   // URL de despliegue de CapacitaPro LMS en producción
-  lmsLoginUrl: 'https://capacitapro-solutionacademy.vercel.app/login'
+  lmsLoginUrl: 'https://capacitapro-solutionacademy.vercel.app/login',
+  // API pública de cursos publicados en CapacitaPro (sincronización automática en vivo)
+  catalogApiUrl: 'https://capacitapro-solutionacademy.vercel.app/api/public/courses'
 };
 
-const COURSES_DATA = [
+let COURSES_DATA = [
   {
     id: 'retroexcavadora',
     title: 'Operador de Retroexcavadora',
@@ -245,11 +247,168 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeCategory = 'todos';
   let searchQuery = '';
 
-  // Update dynamic counts
-  document.getElementById('count-todos').textContent = COURSES_DATA.length;
-  document.getElementById('count-maquinaria').textContent = COURSES_DATA.filter(c => c.category === 'maquinaria').length;
-  document.getElementById('count-construccion').textContent = COURSES_DATA.filter(c => c.category === 'construccion').length;
-  document.getElementById('count-industrial').textContent = COURSES_DATA.filter(c => c.category === 'industrial').length;
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function classifyCategoryKey(categoryText, titleText) {
+    const combined = `${categoryText || ''} ${titleText || ''}`
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    if (/(maquin|vial|retro|excav|autoelev|clark|pala|bobcat|grua|forestal|agricol)/.test(combined)) {
+      return 'maquinaria';
+    }
+    if (/(construc|steel|durlock|seco|electr|albanil|plomer|obra civil|plano)/.test(combined)) {
+      return 'construccion';
+    }
+    if (/(soldad|industr|segurid|higiene|manten|hidraul|mecan|metal)/.test(combined)) {
+      return 'industrial';
+    }
+    return 'maquinaria';
+  }
+
+  function pickCategoryIcon(categoryKey, titleText) {
+    const t = (titleText || '').toLowerCase();
+    if (t.includes('autoelev') || t.includes('clark')) return '🏗️';
+    if (t.includes('pala')) return '⚙️';
+    if (t.includes('mini') || t.includes('bobcat')) return '🚧';
+    if (t.includes('electr')) return '⚡';
+    if (t.includes('soldad')) return '👨‍🏭';
+    if (t.includes('albanil') || t.includes('albañil')) return '🧱';
+    if (t.includes('steel') || t.includes('durlock') || t.includes('seco')) return '🏠';
+    if (categoryKey === 'construccion') return '🏗️';
+    if (categoryKey === 'industrial') return '🛡️';
+    return '🚜';
+  }
+
+  function levelToLabel(level) {
+    if (level === 'advanced') return 'Nivel Avanzado';
+    if (level === 'intermediate') return 'Nivel Intermedio';
+    return 'Nivel Inicial';
+  }
+
+  function mapCapacitaProCourse(apiCourse) {
+    const categoryKey = classifyCategoryKey(apiCourse.category, apiCourse.title);
+    const modules = Array.isArray(apiCourse.modules) ? apiCourse.modules : [];
+    const syllabus =
+      modules.length > 0
+        ? modules.map(m =>
+            m.description
+              ? `${m.title}: ${m.description}`
+              : `${m.title}${m.lessons_count ? ` (${m.lessons_count} clases)` : ''}`
+          )
+        : [
+            'Módulo 1: Fundamentos técnicos y normas de seguridad.',
+            'Módulo 2: Prácticas operativas guiadas y evaluación certificadora.'
+          ];
+
+    const highlights = [
+      apiCourse.is_sequential
+        ? 'Avance guiado por módulos correlativos en CapacitaPro'
+        : 'Acceso flexible a todos los módulos en el Campus Virtual',
+      apiCourse.total_lessons > 0
+        ? `${modules.length} módulo(s) • ${apiCourse.total_lessons} clase(s) y evaluaciones`
+        : 'Material técnico digital y prácticas reales presenciales',
+      apiCourse.certificate_enabled
+        ? `Certificado PDF verificable con QR (aprobación ≥ ${apiCourse.passing_score}%)`
+        : `Evaluación técnica con nota mínima de ${apiCourse.passing_score}%`
+    ];
+
+    return {
+      id: apiCourse.id,
+      slug: apiCourse.slug,
+      title: apiCourse.title,
+      category: categoryKey,
+      categoryLabel: apiCourse.category || 'Formación Técnica',
+      icon: pickCategoryIcon(categoryKey, apiCourse.title),
+      duration: `${apiCourse.estimated_hours || 8} hs certificadas`,
+      modality: 'Presencial + Campus CapacitaPro',
+      badge: levelToLabel(apiCourse.level),
+      shortDesc:
+        apiCourse.short_description ||
+        apiCourse.description ||
+        'Capacitación técnica certificada dictada por Solution Academy en CapacitaPro.',
+      highlights,
+      syllabus,
+      career:
+        apiCourse.description ||
+        'Inserción en empresas constructoras, logísticas, industrias y proyectos técnicos independientes con diploma verificable por QR.',
+      campusUrl: apiCourse.campus_url || ACADEMY_CONFIG.lmsLoginUrl
+    };
+  }
+
+  function updateCountsAndCourseSelect() {
+    document.getElementById('count-todos').textContent = COURSES_DATA.length;
+    document.getElementById('count-maquinaria').textContent = COURSES_DATA.filter(
+      c => c.category === 'maquinaria'
+    ).length;
+    document.getElementById('count-construccion').textContent = COURSES_DATA.filter(
+      c => c.category === 'construccion'
+    ).length;
+    document.getElementById('count-industrial').textContent = COURSES_DATA.filter(
+      c => c.category === 'industrial'
+    ).length;
+
+    const courseSelect = document.getElementById('student-course');
+    if (courseSelect) {
+      const prevValue = courseSelect.value;
+      courseSelect.innerHTML = '<option value="" disabled selected>Seleccioná un curso...</option>';
+
+      const groups = [
+        { key: 'maquinaria', label: '🚜 Operación de Maquinaria Pesada' },
+        { key: 'construccion', label: '🏗️ Construcción y Oficios' },
+        { key: 'industrial', label: '👨‍🏭 Soldadura, Mecánica y Seguridad' }
+      ];
+
+      groups.forEach(group => {
+        const items = COURSES_DATA.filter(c => c.category === group.key);
+        if (items.length === 0) return;
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = group.label;
+        items.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.title;
+          opt.textContent = c.title;
+          optgroup.appendChild(opt);
+        });
+        courseSelect.appendChild(optgroup);
+      });
+
+      if (prevValue) {
+        courseSelect.value = prevValue;
+      }
+    }
+  }
+
+  async function syncCoursesFromCapacitaPro() {
+    const syncBadge = document.getElementById('catalog-sync-badge');
+    try {
+      const response = await fetch(ACADEMY_CONFIG.catalogApiUrl, {
+        method: 'GET',
+        headers: { Accept: 'application/json' }
+      });
+      if (!response.ok) return;
+      const payload = await response.json();
+      if (Array.isArray(payload.courses) && payload.courses.length > 0) {
+        COURSES_DATA = payload.courses.map(mapCapacitaProCourse);
+        updateCountsAndCourseSelect();
+        renderCourses();
+        if (syncBadge) {
+          syncBadge.textContent = `SINCRONIZADO CON CAPACITAPRO (${COURSES_DATA.length} CURSOS ACTIVOS)`;
+        }
+      }
+    } catch {
+      // Mantiene el catálogo base si el API no está disponible offline
+    }
+  }
+
+  updateCountsAndCourseSelect();
 
   // Render Courses
   function renderCourses() {
@@ -279,25 +438,25 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div class="course-card__top">
           <div class="course-card__badges">
-            <div class="course-card__icon" aria-hidden="true">${course.icon}</div>
-            <span class="course-card__tag">${course.badge}</span>
+            <div class="course-card__icon" aria-hidden="true">${escapeHtml(course.icon)}</div>
+            <span class="course-card__tag">${escapeHtml(course.badge)}</span>
           </div>
-          <h3 class="course-card__title">${course.title}</h3>
-          <p class="course-card__desc">${course.shortDesc}</p>
+          <h3 class="course-card__title">${escapeHtml(course.title)}</h3>
+          <p class="course-card__desc">${escapeHtml(course.shortDesc)}</p>
           <ul class="course-card__highlights">
-            ${course.highlights.map(item => `<li>${item}</li>`).join('')}
+            ${course.highlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
           </ul>
         </div>
         <div>
           <div class="course-card__meta">
-            <span class="meta-pill">⏱️ ${course.duration}</span>
-            <span class="meta-pill">🛠️ ${course.modality}</span>
+            <span class="meta-pill">⏱️ ${escapeHtml(course.duration)}</span>
+            <span class="meta-pill">🛠️ ${escapeHtml(course.modality)}</span>
           </div>
           <div class="course-card__footer">
-            <button type="button" class="btn btn--outline btn--sm" data-open-modal="${course.id}">
+            <button type="button" class="btn btn--outline btn--sm" data-open-modal="${escapeHtml(course.id)}">
               Ver Temario
             </button>
-            <button type="button" class="btn btn--primary btn--sm" data-select-course="${course.title}">
+            <button type="button" class="btn btn--primary btn--sm" data-select-course="${escapeHtml(course.title)}">
               Inscribirme →
             </button>
           </div>
@@ -372,16 +531,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modal-course-desc').textContent = course.shortDesc;
 
     document.getElementById('modal-course-specs').innerHTML = `
-      <span class="meta-pill">⏱️ Duración: ${course.duration}</span>
-      <span class="meta-pill">🛠️ Modalidad: ${course.modality}</span>
+      <span class="meta-pill">⏱️ Duración: ${escapeHtml(course.duration)}</span>
+      <span class="meta-pill">🛠️ Modalidad: ${escapeHtml(course.modality)}</span>
       <span class="meta-pill">🎓 Incluye Certificación y Credencial</span>
     `;
 
     document.getElementById('modal-course-syllabus').innerHTML = course.syllabus
-      .map(step => `<li>${step}</li>`)
+      .map(step => `<li>${escapeHtml(step)}</li>`)
       .join('');
 
     document.getElementById('modal-course-career').textContent = course.career;
+
+    const modalCampusBtn = document.getElementById('modal-campus-btn');
+    if (modalCampusBtn) {
+      modalCampusBtn.setAttribute('href', course.campusUrl || ACADEMY_CONFIG.lmsLoginUrl);
+    }
 
     modalInscribeBtn.onclick = () => {
       courseModal.close();
@@ -460,41 +624,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const ambiente = document.querySelector('[data-question="ambiente"] .quiz-option.active')?.dataset.value || 'vial';
     const meta = document.querySelector('[data-question="meta"] .quiz-option.active')?.dataset.value || 'empleo';
 
-    const recommendations = {
-      vial: {
-        title: 'Operador de Retroexcavadora y Pala Cargadora',
-        courseValue: 'Operador de Retroexcavadora',
-        desc: 'Es el perfil más buscado en obras viales, municipios y movimiento de suelos. Con nuestras prácticas reales en cabina salís listo para superar pruebas técnicas de ingreso.',
-        meta: ['⏱️ 6 Semanas', '🚜 80% Práctica en Campo', '🪪 Carnet Habilitante']
-      },
-      logistica: {
-        title: 'Operador de Autoelevador (Clark) — Normativa SRT',
-        courseValue: 'Operador de Autoelevador (Clark)',
-        desc: 'Ideal para ingresar rápido en centros logísticos, fábricas, depósitos y corralones. Aprendés estibaje en altura y seguridad industrial bajo estándares vigentes.',
-        meta: ['⏱️ 4 Semanas / Sábados', '📦 Alta Rotación Laboral', '🪪 Credencial Técnica']
-      },
-      obra: {
-        title:
-          meta === 'independiente'
-            ? 'Construcción en Seco (Steel Framing & Durlock) + Electricidad'
-            : 'Construcción en Seco: Steel Framing y Durlock',
-        courseValue: 'Construcción en Seco: Steel Framing y Durlock',
-        desc: 'El sistema de construcción en seco tiene altísima demanda tanto para trabajar por cuenta propia haciendo reformas y ampliaciones como en empresas constructoras.',
-        meta: ['⏱️ 8 Semanas', '🏗️ Taller 100% Práctico', '📐 Incluye Presupuestación']
-      },
-      taller: {
-        title: 'Soldadura Industrial (MIG / TIG / Electrodo)',
-        courseValue: 'Soldadura Industrial (MIG / TIG / Electrodo)',
-        desc: 'Un oficio técnico indispensable en metalúrgicas, montaje de galpones, mantenimiento de equipos pesados y fabricación de estructuras propias.',
-        meta: ['⏱️ 6 Semanas', '👨‍🏭 Práctica en Cabina', '⚡ Alta Rentabilidad']
-      }
+    const categoryByAmbiente = {
+      vial: 'maquinaria',
+      logistica: 'maquinaria',
+      obra: 'construccion',
+      taller: 'industrial'
     };
 
-    const rec = recommendations[ambiente];
+    const keywordByAmbiente = {
+      vial: /(retro|pala|excav|vial|maquin)/i,
+      logistica: /(autoelev|clark|logist|depos)/i,
+      obra: /(steel|durlock|electr|alban|construc)/i,
+      taller: /(soldad|segurid|higiene|hidraul|manten|industr)/i
+    };
+
+    const matchedLiveCourse =
+      COURSES_DATA.find(c => keywordByAmbiente[ambiente]?.test(`${c.title} ${c.categoryLabel}`)) ||
+      COURSES_DATA.find(c => c.category === categoryByAmbiente[ambiente]) ||
+      COURSES_DATA[0];
+
+    const rec = matchedLiveCourse
+      ? {
+          title: matchedLiveCourse.title,
+          courseValue: matchedLiveCourse.title,
+          desc:
+            meta === 'independiente'
+              ? `${matchedLiveCourse.shortDesc} Ideal para sumar una especialidad técnica certificada y trabajar de forma independiente o contratada.`
+              : matchedLiveCourse.shortDesc,
+          meta: [
+            `⏱️ ${matchedLiveCourse.duration}`,
+            `🛠️ ${matchedLiveCourse.modality}`,
+            `🎓 ${matchedLiveCourse.badge}`
+          ]
+        }
+      : {
+          title: 'Capacitación Técnica Certificada',
+          courseValue: '',
+          desc: 'Consultanos por los cursos disponibles en el Campus Virtual CapacitaPro.',
+          meta: ['🎓 Certificación Oficial']
+        };
+
     document.getElementById('result-title').textContent = rec.title;
     document.getElementById('result-desc').textContent = rec.desc;
     document.getElementById('result-meta').innerHTML = rec.meta
-      .map(m => `<span class="meta-pill">${m}</span>`)
+      .map(m => `<span class="meta-pill">${escapeHtml(m)}</span>`)
       .join('');
 
     document.getElementById('result-wa-btn').onclick = () => {
@@ -607,7 +780,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Initial render
+  // Initial render + live sync from CapacitaPro published catalog
   renderCourses();
+  void syncCoursesFromCapacitaPro();
 });
 
