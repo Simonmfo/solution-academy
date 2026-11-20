@@ -6,7 +6,9 @@ const ACADEMY_CONFIG = {
   instagramUrl: 'https://www.instagram.com/solution_academyy/',
   // Configure WhatsApp phone number here (international format without '+').
   // If left empty, clicking WhatsApp buttons smoothly scrolls and pre-fills the inscription form.
-  whatsappNumber: ''
+  whatsappNumber: '',
+  // URL de despliegue de CapacitaPro LMS (ej. https://campus.solutionacademy.com/login o tu dominio Vercel)
+  lmsLoginUrl: 'http://localhost:3000/login'
 };
 
 const COURSES_DATA = [
@@ -595,6 +597,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.setAttribute('data-theme', next);
     if (themeIcon) {
       themeIcon.textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+  });
+
+  // Sync Campus Virtual (CapacitaPro LMS) login links from ACADEMY_CONFIG
+  document.querySelectorAll('[data-lms-login]').forEach(link => {
+    if (ACADEMY_CONFIG.lmsLoginUrl) {
+      link.setAttribute('href', ACADEMY_CONFIG.lmsLoginUrl);
     }
   });
 
