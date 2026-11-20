@@ -2,8 +2,9 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Plus, ShieldCheck, Trash2 } from "lucide-react";
+import { FolderPlus, Loader2, Plus, ShieldCheck, Trash2, X } from "lucide-react";
 import { createQuestionWithKeyAction, deleteQuestionAction } from "@/actions/course.actions";
+import { createQuestionBankAction, deleteQuestionBankAction } from "@/actions/quiz.actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,51 +13,130 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { QuestionDifficulty, QuestionPublic, QuestionType } from "@/types/database.types";
 
+export interface QuestionBankItem {
+  id: string;
+  title: string;
+  description: string | null;
+}
+
+const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {
+  single_choice: "Opción Múltiple (Única)",
+  multiple_choice: "Opción Múltiple (Varias)",
+  true_false: "Verdadero / Falso",
+  fill_blank: "Completar Espacios",
+  open_ended: "Respuesta Abierta",
+};
+
 export function QuestionBankManager({
   courseId,
-  bankId,
+  banks,
   questions,
 }: {
   courseId: string;
-  bankId: string | null;
+  banks: QuestionBankItem[];
   questions: QuestionPublic[];
 }) {
   const router = useRouter();
+  const [selectedBankId, setSelectedBankId] = React.useState<string>(banks[0]?.id ?? "");
+  const [filterBankId, setFilterBankId] = React.useState<string>("all");
+  const [filterType, setFilterType] = React.useState<string>("all");
+
+  // Create Bank form
+  const [newBankTitle, setNewBankTitle] = React.useState("");
+  const [newBankDesc, setNewBankDesc] = React.useState("");
+  const [savingBank, setSavingBank] = React.useState(false);
+
+  // Create Question form
   const [questionType, setQuestionType] = React.useState<QuestionType>("single_choice");
   const [prompt, setPrompt] = React.useState("");
   const [points, setPoints] = React.useState(20);
   const [difficulty, setDifficulty] = React.useState<QuestionDifficulty>("medium");
   const [explanation, setExplanation] = React.useState("");
 
-  // Options for choice types
-  const [optA, setOptA] = React.useState("");
-  const [optB, setOptB] = React.useState("");
-  const [optC, setOptC] = React.useState("");
-  const [singleCorrect, setSingleCorrect] = React.useState<"a" | "b" | "c">("a");
+  // Dynamic choice list (2 to 6 options)
+  const [choices, setChoices] = React.useState<Array<{ id: string; label: string }>>([
+    { id: "a", label: "" },
+    { id: "b", label: "" },
+    { id: "c", label: "" },
+    { id: "d", label: "" },
+  ]);
+  const [singleCorrect, setSingleCorrect] = React.useState<string>("a");
   const [multiCorrect, setMultiCorrect] = React.useState<string[]>(["a"]);
   const [trueFalseCorrect, setTrueFalseCorrect] = React.useState<boolean>(true);
   const [fillBlankAccepted, setFillBlankAccepted] = React.useState("");
   const [openRubric, setOpenRubric] = React.useState("");
 
   const [saving, setSaving] = React.useState(false);
-  const [feedback, setFeedback] = React.useState<string | null>(null);
+  const [feedback, setFeedback] = React.useState<{ text: string; isError?: boolean } | null>(null);
 
-  if (!bankId) {
-    return (
-      <Card>
-        <CardContent className="py-10 text-center text-sm text-muted-foreground">
-          Este curso todavía no tiene un banco de preguntas configurado.
-        </CardContent>
-      </Card>
-    );
-  }
+  React.useEffect(() => {
+    if (!selectedBankId && banks.length > 0) {
+      setSelectedBankId(banks[0].id);
+    }
+  }, [banks, selectedBankId]);
+
+  const handleCreateBank = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newBankTitle.trim()) return;
+    setSavingBank(true);
+    setFeedback(null);
+    const res = await createQuestionBankAction({
+      courseId,
+      title: newBankTitle.trim(),
+      description: newBankDesc.trim() || undefined,
+    });
+    setSavingBank(false);
+    if (!res.success || !res.data) {
+      setFeedback({ text: res.error ?? "No se pudo crear el banco.", isError: true });
+      return;
+    }
+    setNewBankTitle("");
+    setNewBankDesc("");
+    setSelectedBankId(res.data.id);
+    setFeedback({ text: "Nuevo banco de preguntas creado." });
+    router.refresh();
+  };
+
+  const handleDeleteBank = async (bank: QuestionBankItem) => {
+    if (
+      !window.confirm(
+        `¿Eliminar el banco "${bank.title}" y todas las preguntas que contiene?`
+      )
+    )
+      return;
+    const res = await deleteQuestionBankAction({ bankId: bank.id, courseId });
+    if (!res.success) {
+      setFeedback({ text: res.error ?? "Error eliminando banco.", isError: true });
+    } else {
+      setFeedback({ text: "Banco eliminado." });
+      router.refresh();
+    }
+  };
+
+  const addChoiceSlot = () => {
+    if (choices.length >= 6) return;
+    const nextLetter = String.fromCharCode(97 + choices.length);
+    setChoices((prev) => [...prev, { id: nextLetter, label: "" }]);
+  };
+
+  const removeChoiceSlot = (id: string) => {
+    if (choices.length <= 2) return;
+    setChoices((prev) => prev.filter((c) => c.id !== id));
+    setMultiCorrect((prev) => prev.filter((x) => x !== id));
+    if (singleCorrect === id) setSingleCorrect(choices[0]?.id ?? "a");
+  };
 
   const toggleMulti = (id: string) => {
     setMultiCorrect((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleCreateQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedBankId) {
+      setFeedback({ text: "Primero creá o seleccioná un banco de preguntas.", isError: true });
+      return;
+    }
+
     setSaving(true);
     setFeedback(null);
 
@@ -64,16 +144,31 @@ export function QuestionBankManager({
     let correctAnswer: unknown = {};
 
     if (questionType === "single_choice" || questionType === "multiple_choice") {
-      const opts = [
-        { id: "a", label: optA.trim() },
-        { id: "b", label: optB.trim() },
-        ...(optC.trim() ? [{ id: "c", label: optC.trim() }] : []),
-      ];
-      optionsPublic = opts;
-      correctAnswer =
-        questionType === "single_choice"
-          ? { option_id: singleCorrect }
-          : { option_ids: multiCorrect };
+      const filled = choices
+        .map((c) => ({ id: c.id, label: c.label.trim() }))
+        .filter((c) => c.label.length > 0);
+
+      if (filled.length < 2) {
+        setSaving(false);
+        setFeedback({ text: "Cargá al menos 2 opciones de respuesta.", isError: true });
+        return;
+      }
+
+      optionsPublic = filled;
+      if (questionType === "single_choice") {
+        const validCorrect = filled.some((c) => c.id === singleCorrect)
+          ? singleCorrect
+          : filled[0].id;
+        correctAnswer = { option_id: validCorrect };
+      } else {
+        const validMulti = multiCorrect.filter((id) => filled.some((c) => c.id === id));
+        if (validMulti.length === 0) {
+          setSaving(false);
+          setFeedback({ text: "Marcá al menos una opción correcta.", isError: true });
+          return;
+        }
+        correctAnswer = { option_ids: validMulti };
+      }
     } else if (questionType === "true_false") {
       optionsPublic = [
         { id: "true", label: "Verdadero" },
@@ -86,6 +181,11 @@ export function QuestionBankManager({
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
+      if (variants.length === 0) {
+        setSaving(false);
+        setFeedback({ text: "Ingresá al menos una palabra aceptada.", isError: true });
+        return;
+      }
       correctAnswer = { accepted: [variants] };
     } else if (questionType === "open_ended") {
       optionsPublic = { min_chars: 20 };
@@ -93,7 +193,7 @@ export function QuestionBankManager({
     }
 
     const res = await createQuestionWithKeyAction({
-      bankId,
+      bankId: selectedBankId,
       courseId,
       questionType,
       prompt: prompt.trim(),
@@ -106,43 +206,138 @@ export function QuestionBankManager({
 
     setSaving(false);
     if (!res.success) {
-      setFeedback(res.error ?? "No se pudo guardar la pregunta.");
+      setFeedback({ text: res.error ?? "No se pudo guardar la pregunta.", isError: true });
       return;
     }
 
     setPrompt("");
-    setOptA("");
-    setOptB("");
-    setOptC("");
+    setChoices([
+      { id: "a", label: "" },
+      { id: "b", label: "" },
+      { id: "c", label: "" },
+      { id: "d", label: "" },
+    ]);
     setFillBlankAccepted("");
     setOpenRubric("");
     setExplanation("");
-    setFeedback("Pregunta agregada al banco con clave aislada por RLS.");
+    setFeedback({ text: "Pregunta guardada en el banco con clave protegida por RLS." });
     router.refresh();
   };
 
-  const handleDelete = async (questionId: string) => {
+  const handleDeleteQuestion = async (questionId: string) => {
     if (!window.confirm("¿Eliminar esta pregunta del banco?")) return;
     await deleteQuestionAction({ questionId, courseId });
     router.refresh();
   };
 
+  const bankNameMap = new Map(banks.map((b) => [b.id, b.title]));
+  const filteredQuestions = questions.filter((q) => {
+    if (filterBankId !== "all" && q.bank_id !== filterBankId) return false;
+    if (filterType !== "all" && q.question_type !== filterType) return false;
+    return true;
+  });
+
   return (
     <div className="space-y-6">
+      {feedback && (
+        <div
+          className={`rounded-lg border p-3 text-sm font-medium ${
+            feedback.isError
+              ? "border-destructive/30 bg-destructive/10 text-destructive"
+              : "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+          }`}
+        >
+          {feedback.text}
+        </div>
+      )}
+
+      {/* 1. Gestión de Bancos de Preguntas */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <FolderPlus className="h-5 w-5 text-primary" />
+            Bancos de Preguntas del Curso ({banks.length})
+          </CardTitle>
+          <CardDescription>
+            Organizá tus preguntas por unidad temática para generar exámenes aleatorios desde cualquier banco.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <form onSubmit={handleCreateBank} className="grid gap-3 md:grid-cols-3">
+            <Input
+              placeholder="Ej. Banco Módulo 2: Hidráulica y Estabilidad"
+              value={newBankTitle}
+              onChange={(e) => setNewBankTitle(e.target.value)}
+              required
+            />
+            <Input
+              placeholder="Descripción breve (opcional)"
+              value={newBankDesc}
+              onChange={(e) => setNewBankDesc(e.target.value)}
+            />
+            <Button type="submit" disabled={savingBank}>
+              {savingBank ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              Crear Banco
+            </Button>
+          </form>
+
+          {banks.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {banks.map((bank) => {
+                const count = questions.filter((q) => q.bank_id === bank.id).length;
+                return (
+                  <div
+                    key={bank.id}
+                    className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 py-1.5 text-xs"
+                  >
+                    <span className="font-semibold">{bank.title}</span>
+                    <Badge variant="outline">{count} preg.</Badge>
+                    {banks.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteBank(bank)}
+                        className="text-muted-foreground hover:text-destructive"
+                        title="Eliminar banco"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* 2. Creador de Preguntas (5 tipos) */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <ShieldCheck className="h-5 w-5 text-primary" />
-            Nueva Pregunta para el Banco del Curso
+            Agregar Pregunta al Banco
           </CardTitle>
           <CardDescription>
-            Soporta los 5 tipos de preguntas estilo Moodle. Las respuestas correctas se aíslan en{" "}
-            <code>question_answer_keys</code>.
+            Las respuestas correctas se almacenan aisladas en <code>question_answer_keys</code> y nunca se envían al navegador del alumno.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleCreate} className="space-y-4">
-            <div className="grid gap-3 sm:grid-cols-3">
+          <form onSubmit={handleCreateQuestion} className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="space-y-1">
+                <Label className="text-xs">Banco Destino</Label>
+                <select
+                  value={selectedBankId}
+                  onChange={(e) => setSelectedBankId(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                >
+                  {banks.map((b) => (
+                    <option key={b.id} value={b.id}>
+                      {b.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="space-y-1">
                 <Label className="text-xs">Tipo de Pregunta</Label>
                 <select
@@ -181,7 +376,7 @@ export function QuestionBankManager({
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs">Enunciado</Label>
+              <Label className="text-xs">Enunciado de la Pregunta</Label>
               <Textarea
                 required
                 rows={2}
@@ -192,61 +387,69 @@ export function QuestionBankManager({
             </div>
 
             {(questionType === "single_choice" || questionType === "multiple_choice") && (
-              <div className="space-y-2.5 rounded-lg border border-border bg-secondary/30 p-3">
-                <Input
-                  required
-                  placeholder="Opción A"
-                  value={optA}
-                  onChange={(e) => setOptA(e.target.value)}
-                />
-                <Input
-                  required
-                  placeholder="Opción B"
-                  value={optB}
-                  onChange={(e) => setOptB(e.target.value)}
-                />
-                <Input
-                  placeholder="Opción C (opcional)"
-                  value={optC}
-                  onChange={(e) => setOptC(e.target.value)}
-                />
+              <div className="space-y-2.5 rounded-xl border border-border bg-secondary/30 p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold">
+                    Opciones de Respuesta (marcá{" "}
+                    {questionType === "single_choice" ? "la correcta" : "todas las correctas"})
+                  </span>
+                  {choices.length < 6 && (
+                    <Button type="button" variant="outline" size="sm" onClick={addChoiceSlot}>
+                      <Plus className="h-3.5 w-3.5" /> Opción
+                    </Button>
+                  )}
+                </div>
 
-                {questionType === "single_choice" ? (
-                  <div className="flex items-center gap-3 pt-1 text-xs">
-                    <span className="font-semibold">Correcta:</span>
-                    {(["a", "b", "c"] as const).map((k) => (
-                      <label key={k} className="flex items-center gap-1 uppercase">
-                        <input
-                          type="radio"
-                          name="singleCorrect"
-                          checked={singleCorrect === k}
-                          onChange={() => setSingleCorrect(k)}
-                        />
-                        Opción {k}
-                      </label>
-                    ))}
+                {choices.map((c) => (
+                  <div key={c.id} className="flex items-center gap-2">
+                    {questionType === "single_choice" ? (
+                      <input
+                        type="radio"
+                        name="singleCorrect"
+                        checked={singleCorrect === c.id}
+                        onChange={() => setSingleCorrect(c.id)}
+                        title="Marcar como respuesta correcta"
+                      />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        checked={multiCorrect.includes(c.id)}
+                        onChange={() => toggleMulti(c.id)}
+                        title="Marcar como respuesta correcta"
+                      />
+                    )}
+                    <span className="w-6 text-xs font-bold uppercase text-muted-foreground">
+                      {c.id})
+                    </span>
+                    <Input
+                      placeholder={`Texto de la opción ${c.id.toUpperCase()}`}
+                      value={c.label}
+                      onChange={(e) =>
+                        setChoices((prev) =>
+                          prev.map((item) =>
+                            item.id === c.id ? { ...item, label: e.target.value } : item
+                          )
+                        )
+                      }
+                    />
+                    {choices.length > 2 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeChoiceSlot(c.id)}
+                      >
+                        <X className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                    )}
                   </div>
-                ) : (
-                  <div className="flex items-center gap-3 pt-1 text-xs">
-                    <span className="font-semibold">Correctas:</span>
-                    {["a", "b", "c"].map((k) => (
-                      <label key={k} className="flex items-center gap-1 uppercase">
-                        <input
-                          type="checkbox"
-                          checked={multiCorrect.includes(k)}
-                          onChange={() => toggleMulti(k)}
-                        />
-                        Opción {k}
-                      </label>
-                    ))}
-                  </div>
-                )}
+                ))}
               </div>
             )}
 
             {questionType === "true_false" && (
-              <div className="flex items-center gap-4 text-sm">
-                <label className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-5 rounded-xl border border-border bg-secondary/30 p-4 text-sm">
+                <label className="flex cursor-pointer items-center gap-2 font-medium">
                   <input
                     type="radio"
                     checked={trueFalseCorrect}
@@ -254,7 +457,7 @@ export function QuestionBankManager({
                   />
                   Respuesta Correcta: Verdadero
                 </label>
-                <label className="flex items-center gap-2">
+                <label className="flex cursor-pointer items-center gap-2 font-medium">
                   <input
                     type="radio"
                     checked={!trueFalseCorrect}
@@ -279,10 +482,10 @@ export function QuestionBankManager({
 
             {questionType === "open_ended" && (
               <div className="space-y-1">
-                <Label className="text-xs">Rúbrica de corrección para el instructor</Label>
+                <Label className="text-xs">Rúbrica de evaluación para el instructor</Label>
                 <Textarea
                   rows={2}
-                  placeholder="Criterios que debe mencionar el alumno..."
+                  placeholder="Criterios que debe incluir el alumno para aprobar..."
                   value={openRubric}
                   onChange={(e) => setOpenRubric(e.target.value)}
                 />
@@ -292,33 +495,60 @@ export function QuestionBankManager({
             <div className="space-y-1">
               <Label className="text-xs">Retroalimentación / Explicación (opcional)</Label>
               <Input
-                placeholder="Explicación que verá el alumno tras entregar..."
+                placeholder="Explicación que verá el alumno al finalizar el intento..."
                 value={explanation}
                 onChange={(e) => setExplanation(e.target.value)}
               />
             </div>
 
-            {feedback && <p className="text-sm font-medium text-primary">{feedback}</p>}
-
-            <Button type="submit" disabled={saving}>
+            <Button type="submit" disabled={saving || banks.length === 0}>
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-              Agregar al Banco de Preguntas
+              Guardar Pregunta en el Banco
             </Button>
           </form>
         </CardContent>
       </Card>
 
+      {/* 3. Listado Filtrable de Preguntas */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">
-            Preguntas en el Banco ({questions.length})
+            Preguntas Cargadas ({filteredQuestions.length})
           </CardTitle>
+          <div className="flex flex-wrap gap-2">
+            <select
+              value={filterBankId}
+              onChange={(e) => setFilterBankId(e.target.value)}
+              className="h-9 rounded-md border border-input bg-background px-2.5 text-xs"
+            >
+              <option value="all">Todos los bancos</option>
+              {banks.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.title}
+                </option>
+              ))}
+            </select>
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="h-9 rounded-md border border-input bg-background px-2.5 text-xs"
+            >
+              <option value="all">Todos los tipos</option>
+              {(Object.keys(QUESTION_TYPE_LABELS) as QuestionType[]).map((t) => (
+                <option key={t} value={t}>
+                  {QUESTION_TYPE_LABELS[t]}
+                </option>
+              ))}
+            </select>
+          </div>
         </CardHeader>
         <CardContent className="space-y-2.5">
-          {questions.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Todavía no hay preguntas cargadas.</p>
+          {filteredQuestions.length === 0 ? (
+            <p className="py-6 text-center text-sm text-muted-foreground">
+              No hay preguntas con el filtro actual.
+            </p>
           ) : (
-            questions.map((q, idx) => (
+            filteredQuestions.map((q, idx) => (
               <div
                 key={q.id}
                 className="flex items-start justify-between gap-3 rounded-lg border border-border p-3"
@@ -326,7 +556,10 @@ export function QuestionBankManager({
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="outline">#{idx + 1}</Badge>
-                    <Badge variant="secondary">{q.question_type}</Badge>
+                    <Badge variant="secondary">{QUESTION_TYPE_LABELS[q.question_type]}</Badge>
+                    <Badge variant="outline" className="text-[11px]">
+                      {bankNameMap.get(q.bank_id) ?? "Banco"}
+                    </Badge>
                     <span className="text-xs text-muted-foreground">
                       {q.points} pts • {q.difficulty}
                     </span>
@@ -337,7 +570,7 @@ export function QuestionBankManager({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleDelete(q.id)}
+                  onClick={() => handleDeleteQuestion(q.id)}
                   title="Eliminar pregunta"
                 >
                   <Trash2 className="h-4 w-4 text-destructive" />
@@ -350,4 +583,3 @@ export function QuestionBankManager({
     </div>
   );
 }
-

@@ -11,8 +11,8 @@ export default async function LearnCourseLayout({
   children: React.ReactNode;
 }) {
   const { courseSlug } = await params;
-  const { user } = await getCurrentUserWithProfile();
-  if (!user) redirect("/login");
+  const { user, profile } = await getCurrentUserWithProfile();
+  if (!user || !profile) redirect("/login");
 
   const supabase = await createClient();
   const { data: course } = await supabase
@@ -23,40 +23,55 @@ export default async function LearnCourseLayout({
 
   if (!course) notFound();
 
-  const [{ data: enrollment }, { data: modules }, { data: lessons }, { data: progressRows }] =
-    await Promise.all([
-      supabase
-        .from("enrollments")
-        .select("id, progress_percentage")
-        .eq("course_id", course.id)
-        .eq("user_id", user.id)
-        .single(),
-      supabase
-        .from("modules")
-        .select("id, title, position, requires_quiz_pass")
-        .eq("course_id", course.id)
-        .eq("is_published", true)
-        .order("position", { ascending: true }),
-      supabase
-        .from("lessons")
-        .select("id, module_id, slug, title, lesson_type, duration_minutes, position")
-        .eq("course_id", course.id)
-        .eq("is_published", true)
-        .order("position", { ascending: true }),
-      supabase
-        .from("lesson_progress")
-        .select("lesson_id, status")
-        .eq("course_id", course.id)
-        .eq("user_id", user.id),
-    ]);
+  const [
+    { data: enrollment },
+    { data: modules },
+    { data: lessons },
+    { data: progressRows },
+    { data: cert },
+  ] = await Promise.all([
+    supabase
+      .from("enrollments")
+      .select("id, progress_percentage")
+      .eq("course_id", course.id)
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("modules")
+      .select("id, title, position, requires_quiz_pass")
+      .eq("course_id", course.id)
+      .eq("is_published", true)
+      .order("position", { ascending: true }),
+    supabase
+      .from("lessons")
+      .select("id, module_id, slug, title, lesson_type, duration_minutes, position")
+      .eq("course_id", course.id)
+      .eq("is_published", true)
+      .order("position", { ascending: true }),
+    supabase
+      .from("lesson_progress")
+      .select("lesson_id, status")
+      .eq("course_id", course.id)
+      .eq("user_id", user.id),
+    supabase
+      .from("certificates")
+      .select("verification_code")
+      .eq("course_id", course.id)
+      .eq("user_id", user.id)
+      .is("revoked_at", null)
+      .maybeSingle(),
+  ]);
 
   const completedSet = new Set(
     (progressRows ?? []).filter((r) => r.status === "completed").map((r) => r.lesson_id as string)
   );
 
-  // Evaluar acceso secuencial por módulo en paralelo usando la RPC can_access_module
+  // Instructores y Super Admins pueden previsualizar todos los módulos desbloqueados
   const unlockChecks = await Promise.all(
     (modules ?? []).map(async (m) => {
+      if (profile.role !== "student") {
+        return { id: m.id, unlocked: true };
+      }
       const { data: allowed } = await supabase.rpc("can_access_module", {
         p_user_id: user.id,
         p_module_id: m.id,
@@ -90,10 +105,12 @@ export default async function LearnCourseLayout({
       courseTitle={course.title}
       courseSlug={course.slug}
       progressPercentage={Number(enrollment?.progress_percentage ?? 0)}
+      xpPoints={profile.xp_points}
+      currentStreak={profile.current_streak}
+      certificateCode={cert?.verification_code ?? null}
       modules={sidebarModules}
     >
       {children}
     </FocusShell>
   );
 }
-

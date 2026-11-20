@@ -36,7 +36,8 @@ export async function GET(
     return NextResponse.json({ error: "No autorizado" }, { status: 403 });
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://capacitapro-solutionacademy.vercel.app";
   const verificationUrl = `${appUrl.replace(/\/$/, "")}/verificar/${cert.verification_code}`;
   const qrDataUrl = await QRCode.toDataURL(verificationUrl, {
     margin: 1,

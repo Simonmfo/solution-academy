@@ -1,10 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { BookOpen, HelpCircle, ShieldCheck } from "lucide-react";
+import { BookOpen, ClipboardCheck, HelpCircle, ShieldCheck } from "lucide-react";
 import { CurriculumEditor } from "@/components/instructor/curriculum-editor";
 import { CourseSettingsTab } from "@/components/instructor/course-settings-tab";
-import { QuestionBankManager } from "@/components/instructor/question-bank-manager";
+import {
+  QuestionBankManager,
+  type QuestionBankItem,
+} from "@/components/instructor/question-bank-manager";
+import {
+  ExamsManager,
+  type InstructorAttemptAuditRow,
+} from "@/components/instructor/exams-manager";
 import type {
   Course,
   Lesson,
@@ -14,7 +21,7 @@ import type {
   Quiz,
 } from "@/types/database.types";
 
-type TabId = "curriculum" | "settings" | "bank";
+type TabId = "curriculum" | "settings" | "bank" | "exams";
 
 export function CourseEditorTabs({
   course,
@@ -22,24 +29,29 @@ export function CourseEditorTabs({
   lessons,
   resources,
   quizzes,
-  bankId,
+  quizQuestionLinks,
+  banks,
   questions,
+  recentAttempts,
 }: {
   course: Course;
   modules: Module[];
   lessons: Lesson[];
   resources: LessonResource[];
   quizzes: Quiz[];
-  bankId: string | null;
+  quizQuestionLinks: Array<{ quiz_id: string; question_id: string }>;
+  banks: QuestionBankItem[];
   questions: QuestionPublic[];
+  recentAttempts: InstructorAttemptAuditRow[];
 }) {
   const [activeTab, setActiveTab] = React.useState<TabId>("curriculum");
 
   const tabs: Array<{ id: TabId; label: string; icon: React.ComponentType<{ className?: string }> }> =
     [
       { id: "curriculum", label: `Temario y PDFs (${modules.length})`, icon: BookOpen },
+      { id: "bank", label: `Bancos de Preguntas (${questions.length})`, icon: HelpCircle },
+      { id: "exams", label: `Exámenes e Intentos (${quizzes.length})`, icon: ClipboardCheck },
       { id: "settings", label: "Correlatividad y Ajustes", icon: ShieldCheck },
-      { id: "bank", label: `Banco de Preguntas (${questions.length})`, icon: HelpCircle },
     ];
 
   return (
@@ -76,12 +88,23 @@ export function CourseEditorTabs({
         />
       )}
 
-      {activeTab === "settings" && <CourseSettingsTab course={course} />}
-
       {activeTab === "bank" && (
-        <QuestionBankManager courseId={course.id} bankId={bankId} questions={questions} />
+        <QuestionBankManager courseId={course.id} banks={banks} questions={questions} />
       )}
+
+      {activeTab === "exams" && (
+        <ExamsManager
+          courseId={course.id}
+          modules={modules}
+          banks={banks}
+          questions={questions}
+          quizzes={quizzes}
+          quizQuestionLinks={quizQuestionLinks}
+          recentAttempts={recentAttempts}
+        />
+      )}
+
+      {activeTab === "settings" && <CourseSettingsTab course={course} />}
     </div>
   );
 }
-
