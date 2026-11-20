@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -109,11 +108,9 @@ function LoginFormInner() {
             <p>Super Admin: <code>superadmin@capacitapro.demo</code> • Clave: <code>CapacitaPro2026!</code></p>
           </div>
 
-          <p className="text-center text-sm text-muted-foreground">
-            ¿Todavía no tenés cuenta?{" "}
-            <Link href="/registro" className="font-semibold text-primary hover:underline">
-              Registrate acá
-            </Link>
+          <p className="text-center text-xs text-muted-foreground">
+            Acceso exclusivo por invitación. Si todavía no tenés usuario, solicitalo a tu{" "}
+            <strong className="text-foreground">Instructor</strong> o al administrador de la academia.
           </p>
         </form>
       </CardContent>

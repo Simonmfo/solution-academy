@@ -3,8 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { loginSchema, registerSchema } from "@/lib/validations/schemas";
+import { loginSchema } from "@/lib/validations/schemas";
 
 export interface ActionResult<T = undefined> {
   success: boolean;
@@ -30,7 +29,7 @@ export async function loginAction(formData: {
   if (error) {
     return {
       success: false,
-      error: "Credenciales incorrectas o cuenta no confirmada.",
+      error: "Credenciales incorrectas o cuenta no habilitada.",
     };
   }
 
@@ -38,50 +37,16 @@ export async function loginAction(formData: {
   return { success: true };
 }
 
-export async function registerAction(formData: {
-  fullName: string;
-  email: string;
-  password: string;
-  companySlug?: string;
-}): Promise<ActionResult> {
-  const parsed = registerSchema.safeParse(formData);
-  if (!parsed.success) {
-    return { success: false, error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
-  }
-
-  let companyId: string | undefined;
-  if (parsed.data.companySlug && parsed.data.companySlug.trim()) {
-    const admin = createAdminClient();
-    const { data: company } = await admin
-      .from("companies")
-      .select("id")
-      .eq("slug", parsed.data.companySlug.trim().toLowerCase())
-      .eq("is_active", true)
-      .single();
-
-    if (!company) {
-      return { success: false, error: "Código de empresa no encontrado o inactivo." };
-    }
-    companyId = company.id;
-  }
-
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
-    email: parsed.data.email,
-    password: parsed.data.password,
-    options: {
-      data: {
-        full_name: parsed.data.fullName,
-        ...(companyId ? { company_id: companyId } : {}),
-      },
-    },
-  });
-
-  if (error) {
-    return { success: false, error: error.message };
-  }
-
-  return { success: true };
+/**
+ * El auto-registro público está deshabilitado por política de seguridad:
+ * solo Instructores (alumnos) y Super Admin (instructores, alumnos y RRHH) pueden dar de alta cuentas.
+ */
+export async function registerAction(): Promise<ActionResult> {
+  return {
+    success: false,
+    error:
+      "El registro público está deshabilitado. Solicitá tu acceso a tu Instructor o Administrador.",
+  };
 }
 
 export async function signOutAction() {
@@ -90,4 +55,3 @@ export async function signOutAction() {
   revalidatePath("/", "layout");
   redirect("/login");
 }
-

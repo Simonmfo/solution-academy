@@ -36,13 +36,13 @@ export function SuperAdminCompanyTools({
   const [maxEnrollments, setMaxEnrollments] = React.useState("");
   const [savingLicense, setSavingLicense] = React.useState(false);
 
-  // Form 3: Create Company Admin / Instructor
+  // Form 3: Create Instructor, Student or Company Admin
   const [staffCompanyId, setStaffCompanyId] = React.useState(companies[0]?.id ?? "");
   const [staffName, setStaffName] = React.useState("");
   const [staffEmail, setStaffEmail] = React.useState("");
   const [staffPassword, setStaffPassword] = React.useState("");
   const [staffRole, setStaffRole] = React.useState<"company_admin" | "instructor" | "student">(
-    "company_admin"
+    "instructor"
   );
   const [savingStaff, setSavingStaff] = React.useState(false);
 
@@ -193,15 +193,15 @@ export function SuperAdminCompanyTools({
           </CardContent>
         </Card>
 
-        {/* 2. Crear Admin RRHH / Instructor */}
+        {/* 2. Crear Instructores, Alumnos o Admin RRHH */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <UserPlus className="h-5 w-5 text-primary" />
-              2. Crear Admin RRHH / Staff
+              2. Crear Instructores y Alumnos
             </CardTitle>
             <CardDescription>
-              Da de alta cuentas administrativas con rol asignado en <code>app_metadata</code>.
+              El auto-registro está bloqueado: solo Super Admin crea Instructores/RRHH y Alumnos.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -239,9 +239,9 @@ export function SuperAdminCompanyTools({
                     }
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                   >
-                    <option value="company_admin">Admin RRHH</option>
                     <option value="instructor">Instructor</option>
                     <option value="student">Alumno</option>
+                    <option value="company_admin">Admin RRHH</option>
                   </select>
                 </div>
               </div>

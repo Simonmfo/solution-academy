@@ -1,8 +1,10 @@
 import { Award, BookOpen, Building2, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { SuperAdminCompanyTools } from "@/components/admin/company-manager";
+import { getRoleLabel } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { UserRole } from "@/types/database.types";
 
 export default async function SuperAdminCompaniesPage() {
   const supabase = await createClient();
@@ -10,17 +12,22 @@ export default async function SuperAdminCompaniesPage() {
   const [
     { data: companies },
     { data: courses },
-    { count: totalUsers },
+    { data: usersList },
     { count: totalCerts },
   ] = await Promise.all([
     supabase.from("companies").select("*").order("created_at", { ascending: false }),
     supabase.from("courses").select("id, title").order("title", { ascending: true }),
-    supabase.from("profiles").select("id", { count: "exact", head: true }),
+    supabase
+      .from("profiles")
+      .select("id, full_name, email, role, is_active, company:companies(name)")
+      .order("created_at", { ascending: false })
+      .limit(100),
     supabase.from("certificates").select("id", { count: "exact", head: true }),
   ]);
 
   const companyList = companies ?? [];
   const courseList = courses ?? [];
+  const allUsers = usersList ?? [];
 
   return (
     <div className="space-y-8">
@@ -29,14 +36,14 @@ export default async function SuperAdminCompaniesPage() {
           Administración Global — CapacitaPro
         </h1>
         <p className="text-sm text-muted-foreground">
-          Gestión de empresas clientes (B2B), asignación de licencias de cursos y métricas globales.
+          Creá empresas clientes, usuarios (Instructores, Alumnos y RRHH) y asigná licencias de cursos.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           { label: "Empresas Clientes", value: companyList.length, icon: Building2 },
-          { label: "Usuarios Totales", value: totalUsers ?? 0, icon: Users },
+          { label: "Usuarios Totales", value: allUsers.length, icon: Users },
           { label: "Cursos en Catálogo", value: courseList.length, icon: BookOpen },
           { label: "Certificados Emitidos", value: totalCerts ?? 0, icon: Award },
         ].map((stat) => (
@@ -56,6 +63,46 @@ export default async function SuperAdminCompaniesPage() {
         companies={companyList.map((c) => ({ id: c.id, name: c.name }))}
         courses={courseList}
       />
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Usuarios de la Plataforma ({allUsers.length})</CardTitle>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-border text-xs uppercase text-muted-foreground">
+              <tr>
+                <th className="py-3 pr-4">Usuario</th>
+                <th className="py-3 pr-4">Rol</th>
+                <th className="py-3 pr-4">Empresa</th>
+                <th className="py-3">Estado</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {allUsers.map((u) => {
+                const comp = Array.isArray(u.company) ? u.company[0] : u.company;
+                return (
+                  <tr key={u.id}>
+                    <td className="py-3 pr-4">
+                      <p className="font-medium">{u.full_name || "Sin nombre"}</p>
+                      <p className="text-xs text-muted-foreground">{u.email}</p>
+                    </td>
+                    <td className="py-3 pr-4">
+                      <Badge variant="outline">{getRoleLabel(u.role as UserRole)}</Badge>
+                    </td>
+                    <td className="py-3 pr-4 text-xs">{comp?.name ?? "Global"}</td>
+                    <td className="py-3">
+                      <Badge variant={u.is_active ? "success" : "secondary"}>
+                        {u.is_active ? "Activo" : "Inactivo"}
+                      </Badge>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -93,4 +140,3 @@ export default async function SuperAdminCompaniesPage() {
     </div>
   );
 }
-

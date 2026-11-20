@@ -59,9 +59,9 @@ export default async function HomePage() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link href="/registro">
+            <Link href="/verificar">
               <Button size="lg" variant="outline">
-                Crear Cuenta de Alumno
+                Validar Certificado QR
               </Button>
             </Link>
           </div>

@@ -42,9 +42,10 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Certificados Empresa", href: "/rrhh/certificados", icon: Award, roles: ["company_admin", "super_admin"] },
 
   { label: "Gestión de Cursos", href: "/instructor/cursos", icon: GraduationCap, roles: ["instructor", "super_admin"] },
+  { label: "Gestión de Alumnos", href: "/instructor/alumnos", icon: Users, roles: ["instructor", "super_admin"] },
   { label: "Bandeja de Correcciones", href: "/instructor/correcciones", icon: ClipboardCheck, roles: ["instructor", "super_admin"] },
 
-  { label: "Empresas y Licencias", href: "/admin/empresas", icon: Building2, roles: ["super_admin"] },
+  { label: "Empresas y Usuarios", href: "/admin/empresas", icon: Building2, roles: ["super_admin"] },
 ];
 
 export function PlatformShell({
