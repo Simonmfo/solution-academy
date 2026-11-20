@@ -3,10 +3,12 @@ import { getCurrentUserWithProfile } from "@/lib/supabase/server";
 import { getDefaultRouteForRole } from "@/lib/utils";
 
 export default async function DashboardDispatcherPage() {
-  const { profile } = await getCurrentUserWithProfile();
-  if (!profile) {
+  const { user, profile } = await getCurrentUserWithProfile();
+  if (!user) {
     redirect("/login");
+  }
+  if (!profile) {
+    return null;
   }
   redirect(getDefaultRouteForRole(profile.role));
 }
-

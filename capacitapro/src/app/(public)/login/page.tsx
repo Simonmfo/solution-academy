@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Loader2, Lock, Mail } from "lucide-react";
@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 function LoginFormInner() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/dashboard";
   const [serverError, setServerError] = React.useState<string | null>(null);
@@ -34,8 +33,7 @@ function LoginFormInner() {
       setServerError(res.error ?? "Error al iniciar sesión");
       return;
     }
-    router.push(redirectTo);
-    router.refresh();
+    window.location.assign(redirectTo);
   };
 
   return (
