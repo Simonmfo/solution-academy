@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Pencil } from "lucide-react";
+import { Eye, Lock, Pencil, ShieldCheck } from "lucide-react";
 import { createClient, getCurrentUserWithProfile } from "@/lib/supabase/server";
 import { CreateCourseForm } from "@/components/instructor/course-builder";
 import { Badge } from "@/components/ui/badge";
@@ -24,9 +24,11 @@ export default async function InstructorCoursesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Gestión de Cursos (Instructor)</h1>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Estudio del Instructor — Cursos y Contenidos
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Creá cursos, configurá módulos correlativos, lecciones multimedia y bancos de preguntas.
+          Creá cursos, reordená módulos y lecciones, subí PDFs privados y configurá reglas de correlatividad.
         </p>
       </div>
 
@@ -34,9 +36,9 @@ export default async function InstructorCoursesPage() {
 
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {(courses ?? []).map((course) => (
-          <Card key={course.id} className="flex flex-col justify-between">
+          <Card key={course.id} className="flex flex-col justify-between transition-shadow hover:shadow-md">
             <CardHeader>
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <Badge variant={course.status === "published" ? "success" : "secondary"}>
                   {course.status}
                 </Badge>
@@ -44,11 +46,24 @@ export default async function InstructorCoursesPage() {
               </div>
               <CardTitle className="mt-2 text-lg">{course.title}</CardTitle>
               <CardDescription className="line-clamp-2">{course.short_description}</CardDescription>
+              <div className="flex flex-wrap gap-1.5 pt-2">
+                <Badge variant="outline" className="text-[11px]">
+                  <Lock className="h-3 w-3" /> {course.is_sequential ? "Secuencial" : "Libre"}
+                </Badge>
+                <Badge variant="outline" className="text-[11px]">
+                  <ShieldCheck className="h-3 w-3" /> Aprobación {course.passing_score}%
+                </Badge>
+              </div>
             </CardHeader>
             <CardFooter className="flex gap-2">
               <Link href={`/instructor/cursos/${course.id}/editar`} className="flex-1">
-                <Button variant="outline" size="sm" className="w-full">
-                  <Pencil className="h-3.5 w-3.5" /> Editar Temario y Banco
+                <Button size="sm" className="w-full">
+                  <Pencil className="h-3.5 w-3.5" /> Abrir Editor
+                </Button>
+              </Link>
+              <Link href={`/aprender/${course.slug}`} target="_blank">
+                <Button variant="outline" size="sm" title="Vista previa en Modo Focus">
+                  <Eye className="h-3.5 w-3.5" />
                 </Button>
               </Link>
             </CardFooter>
