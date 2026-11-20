@@ -7,6 +7,7 @@ import {
   createStudentByInstructorAction,
   enrollStudentsByInstructorAction,
 } from "@/actions/instructor-students.actions";
+import { SOLUTION_ACADEMY, isMainAcademyOrganization } from "@/lib/solution-academy";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -116,7 +117,7 @@ export function InstructorStudentsManager({
   const handleCopyCredentials = () => {
     if (!createdCredentials) return;
     const url = `${window.location.origin}/login`;
-    const msg = `Acceso a CapacitaPro (Solution Academy):\nURL: ${url}\nUsuario: ${createdCredentials.email}\nContraseña: ${createdCredentials.password}`;
+    const msg = `Acceso al Campus Virtual de ${SOLUTION_ACADEMY.name}:\nURL: ${url}\nUsuario: ${createdCredentials.email}\nContraseña: ${createdCredentials.password}`;
     void navigator.clipboard.writeText(msg);
     setCopiedCreds(true);
     setTimeout(() => setCopiedCreds(false), 2500);
@@ -199,7 +200,7 @@ export function InstructorStudentsManager({
                   <Input
                     type="email"
                     required
-                    placeholder="alumno@empresa.com"
+                    placeholder="alumno@solutionacademy.com.ar"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -248,9 +249,9 @@ export function InstructorStudentsManager({
                 </div>
               </div>
 
-              {isSuperAdmin && companies.length > 0 && (
+              {isSuperAdmin && companies.length > 1 && (
                 <div className="space-y-1">
-                  <Label className="text-xs">Empresa / Sede</Label>
+                  <Label className="text-xs">Sede / Convenio</Label>
                   <select
                     value={companyId}
                     onChange={(e) => setCompanyId(e.target.value)}
@@ -258,7 +259,9 @@ export function InstructorStudentsManager({
                   >
                     {companies.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.name}
+                        {isMainAcademyOrganization(c.name)
+                          ? `${SOLUTION_ACADEMY.name} (Sede Principal)`
+                          : `Convenio: ${c.name}`}
                       </option>
                     ))}
                   </select>

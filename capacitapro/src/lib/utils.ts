@@ -31,8 +31,8 @@ export function isOverdue(dueDate: string | null | undefined, status: string): b
 
 export function getRoleLabel(role: UserRole): string {
   const labels: Record<UserRole, string> = {
-    super_admin: "Super Admin",
-    company_admin: "Admin RRHH",
+    super_admin: "Dirección / Admin",
+    company_admin: "Coord. Convenio",
     instructor: "Instructor",
     student: "Alumno",
   };

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Loader2, Lock, Mail } from "lucide-react";
 import { loginSchema, type LoginInput } from "@/lib/validations/schemas";
 import { loginAction } from "@/actions/auth.actions";
+import { SOLUTION_ACADEMY } from "@/lib/solution-academy";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -37,13 +38,16 @@ function LoginFormInner() {
 
   return (
     <Card className="w-full max-w-md shadow-lg">
-      <CardHeader className="space-y-2 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground">
-          CP
-        </div>
-        <CardTitle className="text-2xl font-bold">Ingresá a CapacitaPro</CardTitle>
+      <CardHeader className="space-y-2.5 text-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={SOLUTION_ACADEMY.logoPath}
+          alt={SOLUTION_ACADEMY.name}
+          className="mx-auto h-16 w-16 rounded-2xl border border-border object-cover shadow-md"
+        />
+        <CardTitle className="text-2xl font-bold">{SOLUTION_ACADEMY.name}</CardTitle>
         <CardDescription>
-          Campus Virtual Corporativo de Solution Academy
+          {SOLUTION_ACADEMY.campusTitle} • {SOLUTION_ACADEMY.tagline}
         </CardDescription>
       </CardHeader>
 
@@ -56,13 +60,13 @@ function LoginFormInner() {
           )}
 
           <div className="space-y-1.5">
-            <Label htmlFor="email">Correo corporativo o personal</Label>
+            <Label htmlFor="email">Correo electrónico</Label>
             <div className="relative">
               <Mail className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
                 type="email"
-                placeholder="alumno@capacitapro.demo"
+                placeholder="tu.correo@ejemplo.com"
                 className="pl-9"
                 {...register("email")}
               />
@@ -101,16 +105,10 @@ function LoginFormInner() {
             )}
           </Button>
 
-          <div className="rounded-lg border border-border bg-secondary/50 p-3 text-xs text-muted-foreground">
-            <p className="font-semibold text-foreground">Accesos Demo (tras ejecutar seed.sql):</p>
-            <p className="mt-1">Alumno: <code>alumno@capacitapro.demo</code></p>
-            <p>RRHH: <code>rrhh@capacitapro.demo</code> • Instructor: <code>instructor@capacitapro.demo</code></p>
-            <p>Super Admin: <code>superadmin@capacitapro.demo</code> • Clave: <code>CapacitaPro2026!</code></p>
-          </div>
-
           <p className="text-center text-xs text-muted-foreground">
-            Acceso exclusivo por invitación. Si todavía no tenés usuario, solicitalo a tu{" "}
-            <strong className="text-foreground">Instructor</strong> o al administrador de la academia.
+            Acceso exclusivo para alumnos, instructores y equipo de{" "}
+            <strong className="text-foreground">{SOLUTION_ACADEMY.name}</strong>. Si todavía no
+            tenés usuario, solicitalo a tu instructor o a la dirección académica.
           </p>
         </form>
       </CardContent>

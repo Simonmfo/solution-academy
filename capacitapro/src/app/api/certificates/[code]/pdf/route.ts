@@ -1,12 +1,25 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import QRCode from "qrcode";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUserWithProfile } from "@/lib/supabase/server";
 import { CertificatePdfDocument } from "@/components/certificates/CertificatePdfDocument";
+import { SOLUTION_ACADEMY } from "@/lib/solution-academy";
 import { formatDate } from "@/lib/utils";
 
 export const runtime = "nodejs";
+
+async function loadAcademyLogoDataUrl(): Promise<string | null> {
+  try {
+    const logoPath = path.join(process.cwd(), "public", "logo-solution-academy.jpeg");
+    const bytes = await readFile(logoPath);
+    return `data:image/jpeg;base64,${bytes.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
 
 export async function GET(
   _request: Request,
@@ -26,7 +39,7 @@ export async function GET(
     return NextResponse.json({ error: "Certificado no encontrado" }, { status: 404 });
   }
 
-  // Solo el alumno dueño, RRHH de su empresa o Super Admin pueden descargar el PDF
+  // Solo el alumno dueño, coordinador del convenio o Dirección/Super Admin pueden descargar el PDF
   if (
     !profile ||
     (profile.role !== "super_admin" &&
@@ -36,14 +49,16 @@ export async function GET(
     return NextResponse.json({ error: "No autorizado" }, { status: 403 });
   }
 
-  const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://capacitapro-solutionacademy.vercel.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || SOLUTION_ACADEMY.defaultAppUrl;
   const verificationUrl = `${appUrl.replace(/\/$/, "")}/verificar/${cert.verification_code}`;
-  const qrDataUrl = await QRCode.toDataURL(verificationUrl, {
-    margin: 1,
-    width: 180,
-    color: { dark: "#0D1B2A", light: "#FFFFFF" },
-  });
+  const [qrDataUrl, logoDataUrl] = await Promise.all([
+    QRCode.toDataURL(verificationUrl, {
+      margin: 1,
+      width: 180,
+      color: { dark: SOLUTION_ACADEMY.colors.navy, light: "#FFFFFF" },
+    }),
+    loadAcademyLogoDataUrl(),
+  ]);
 
   const pdfBuffer = await renderToBuffer(
     CertificatePdfDocument({
@@ -57,6 +72,7 @@ export async function GET(
       issuedAtFormatted: formatDate(cert.issued_at),
       verificationUrl,
       qrDataUrl,
+      logoDataUrl,
     })
   );
 
@@ -64,7 +80,7 @@ export async function GET(
     status: 200,
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="Certificado-${cert.certificate_number}.pdf"`,
+      "Content-Disposition": `attachment; filename="Certificado-SolutionAcademy-${cert.certificate_number}.pdf"`,
       "Cache-Control": "private, max-age=3600",
     },
   });

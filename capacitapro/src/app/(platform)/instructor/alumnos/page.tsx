@@ -1,6 +1,7 @@
 import { createClient, getCurrentUserWithProfile } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { InstructorStudentsManager } from "@/components/instructor/students-manager";
+import { SOLUTION_ACADEMY, isMainAcademyOrganization } from "@/lib/solution-academy";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -69,8 +70,8 @@ export default async function InstructorStudentsPage() {
               <tr>
                 <th className="py-3 pr-4">Alumno</th>
                 <th className="py-3 pr-4">Legajo / DNI</th>
-                <th className="py-3 pr-4">Área</th>
-                <th className="py-3 pr-4">Empresa</th>
+                <th className="py-3 pr-4">Área / Comisión</th>
+                <th className="py-3 pr-4">Sede / Convenio</th>
                 <th className="py-3 pr-4">XP / Racha</th>
                 <th className="py-3">Estado</th>
               </tr>
@@ -86,7 +87,11 @@ export default async function InstructorStudentsPage() {
                     </td>
                     <td className="py-3 pr-4 text-xs">{(stu.employee_code as string | null) ?? "—"}</td>
                     <td className="py-3 pr-4 text-xs">{(stu.department as string | null) ?? "General"}</td>
-                    <td className="py-3 pr-4 text-xs">{comp?.name ?? "—"}</td>
+                    <td className="py-3 pr-4 text-xs">
+                      {!comp?.name || isMainAcademyOrganization(comp.name)
+                        ? SOLUTION_ACADEMY.name
+                        : `Convenio: ${comp.name}`}
+                    </td>
                     <td className="py-3 pr-4 text-xs font-semibold">
                       {stu.xp_points as number} XP • {stu.current_streak as number}d
                     </td>

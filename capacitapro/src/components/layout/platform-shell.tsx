@@ -7,12 +7,12 @@ import {
   Award,
   BarChart3,
   BookOpen,
-  Building2,
   ClipboardCheck,
   Flame,
   GraduationCap,
   LogOut,
   Menu,
+  ShieldCheck,
   Trophy,
   Users,
   X,
@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import type { Profile, UserRole } from "@/types/database.types";
 import { cn, getRoleLabel } from "@/lib/utils";
+import { SOLUTION_ACADEMY, isMainAcademyOrganization } from "@/lib/solution-academy";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -34,18 +35,18 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Mis Cursos", href: "/mis-cursos", icon: BookOpen, roles: ["student"] },
-  { label: "Ranking Empresa", href: "/mis-cursos/ranking", icon: Trophy, roles: ["student"] },
+  { label: "Ranking Academia", href: "/mis-cursos/ranking", icon: Trophy, roles: ["student"] },
   { label: "Mis Diplomas", href: "/certificados", icon: Award, roles: ["student"] },
-
-  { label: "Dashboard RRHH", href: "/rrhh", icon: BarChart3, roles: ["company_admin", "super_admin"] },
-  { label: "Empleados e Importación", href: "/rrhh/empleados", icon: Users, roles: ["company_admin", "super_admin"] },
-  { label: "Certificados Empresa", href: "/rrhh/certificados", icon: Award, roles: ["company_admin", "super_admin"] },
 
   { label: "Gestión de Cursos", href: "/instructor/cursos", icon: GraduationCap, roles: ["instructor", "super_admin"] },
   { label: "Gestión de Alumnos", href: "/instructor/alumnos", icon: Users, roles: ["instructor", "super_admin"] },
-  { label: "Bandeja de Correcciones", href: "/instructor/correcciones", icon: ClipboardCheck, roles: ["instructor", "super_admin"] },
+  { label: "Correcciones", href: "/instructor/correcciones", icon: ClipboardCheck, roles: ["instructor", "super_admin"] },
 
-  { label: "Empresas y Usuarios", href: "/admin/empresas", icon: Building2, roles: ["super_admin"] },
+  { label: "Panel de Convenio", href: "/rrhh", icon: BarChart3, roles: ["company_admin"] },
+  { label: "Nómina e Importación", href: "/rrhh/empleados", icon: Users, roles: ["company_admin"] },
+  { label: "Certificados Emitidos", href: "/rrhh/certificados", icon: Award, roles: ["company_admin"] },
+
+  { label: "Administración Academia", href: "/admin/empresas", icon: ShieldCheck, roles: ["super_admin"] },
 ];
 
 export function PlatformShell({
@@ -59,20 +60,25 @@ export function PlatformShell({
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const allowedNav = NAV_ITEMS.filter((item) => item.roles.includes(profile.role));
+  const orgSubtitle =
+    profile.company?.name && !isMainAcademyOrganization(profile.company.name)
+      ? `Convenio: ${profile.company.name}`
+      : SOLUTION_ACADEMY.campusTitle;
 
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar Desktop */}
       <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-card lg:flex">
-        <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-            CP
-          </div>
+        <div className="flex h-16 items-center gap-2.5 border-b border-border px-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={SOLUTION_ACADEMY.logoPath}
+            alt={SOLUTION_ACADEMY.name}
+            className="h-9 w-9 shrink-0 rounded-lg border border-border object-cover"
+          />
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold leading-none">CapacitaPro</p>
-            <p className="truncate text-xs text-muted-foreground">
-              {profile.company?.name ?? "Plataforma Global"}
-            </p>
+            <p className="truncate text-sm font-bold leading-none">{SOLUTION_ACADEMY.name}</p>
+            <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{orgSubtitle}</p>
           </div>
         </div>
 
@@ -114,7 +120,12 @@ export function PlatformShell({
           </div>
 
           <form action={signOutAction}>
-            <Button type="submit" variant="ghost" size="sm" className="w-full justify-start text-muted-foreground">
+            <Button
+              type="submit"
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-muted-foreground"
+            >
               <LogOut className="h-4 w-4" />
               Cerrar Sesión
             </Button>
@@ -136,7 +147,7 @@ export function PlatformShell({
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
             <span className="text-sm font-semibold text-muted-foreground">
-              {profile.company?.name ?? "Solution Academy • CapacitaPro"}
+              {SOLUTION_ACADEMY.name} • {orgSubtitle}
             </span>
           </div>
 
@@ -183,4 +194,3 @@ export function PlatformShell({
     </div>
   );
 }
-

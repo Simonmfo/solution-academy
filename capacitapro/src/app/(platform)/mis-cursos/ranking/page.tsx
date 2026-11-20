@@ -1,5 +1,6 @@
 import { Flame, Trophy, Zap } from "lucide-react";
 import { createClient, getCurrentUserWithProfile } from "@/lib/supabase/server";
+import { SOLUTION_ACADEMY } from "@/lib/solution-academy";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -18,9 +19,9 @@ export default async function LeaderboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Tabla de Posiciones</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Ranking de {SOLUTION_ACADEMY.name}</h1>
         <p className="text-sm text-muted-foreground">
-          Ranking de puntos XP y rachas activas dentro de {profile.company?.name ?? "tu organización"}.
+          Tabla de puntos XP y rachas activas de los alumnos del Campus Virtual.
         </p>
       </div>
 
@@ -28,7 +29,7 @@ export default async function LeaderboardPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5 text-amber-500" />
-            Top Colaboradores en Capacitación
+            Top Alumnos en Capacitación
           </CardTitle>
           <CardDescription>
             Sumás XP al completar lecciones, aprobar evaluaciones y mantener tu racha diaria.
@@ -37,7 +38,7 @@ export default async function LeaderboardPage() {
         <CardContent>
           {!rows || rows.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              El ranking está desactivado para tu empresa o todavía no hay actividad registrada.
+              Todavía no hay actividad registrada en el ranking de la academia.
             </p>
           ) : (
             <div className="divide-y divide-border">

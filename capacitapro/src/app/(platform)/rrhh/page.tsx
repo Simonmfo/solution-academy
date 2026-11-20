@@ -53,10 +53,10 @@ export default async function HrDashboardPage() {
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Panel de RRHH — {profile.company?.name}
+            Panel de Convenio — {profile.company?.name}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Métricas en tiempo real, alertas de cursos vencidos y exportación a Excel.
+            Seguimiento de capacitación en Solution Academy, alertas de vencimientos y reportes en Excel.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

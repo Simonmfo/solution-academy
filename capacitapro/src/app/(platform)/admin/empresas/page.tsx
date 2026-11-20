@@ -1,12 +1,13 @@
-import { Award, BookOpen, Building2, Users } from "lucide-react";
+import { Award, BookOpen, GraduationCap, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { SuperAdminCompanyTools } from "@/components/admin/company-manager";
 import { getRoleLabel } from "@/lib/utils";
+import { SOLUTION_ACADEMY, isMainAcademyOrganization } from "@/lib/solution-academy";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { UserRole } from "@/types/database.types";
 
-export default async function SuperAdminCompaniesPage() {
+export default async function SuperAdminAcademyPage() {
   const supabase = await createClient();
 
   const [
@@ -15,13 +16,13 @@ export default async function SuperAdminCompaniesPage() {
     { data: usersList },
     { count: totalCerts },
   ] = await Promise.all([
-    supabase.from("companies").select("*").order("created_at", { ascending: false }),
+    supabase.from("companies").select("*").order("created_at", { ascending: true }),
     supabase.from("courses").select("id, title").order("title", { ascending: true }),
     supabase
       .from("profiles")
       .select("id, full_name, email, role, is_active, company:companies(name)")
       .order("created_at", { ascending: false })
-      .limit(100),
+      .limit(150),
     supabase.from("certificates").select("id", { count: "exact", head: true }),
   ]);
 
@@ -29,21 +30,29 @@ export default async function SuperAdminCompaniesPage() {
   const courseList = courses ?? [];
   const allUsers = usersList ?? [];
 
+  const mainAcademy =
+    companyList.find((c) => isMainAcademyOrganization(c.name)) ?? companyList[0] ?? null;
+  const corporateAgreements = companyList.filter((c) => c.id !== mainAcademy?.id);
+
+  const instructorCount = allUsers.filter((u) => u.role === "instructor").length;
+  const studentCount = allUsers.filter((u) => u.role === "student").length;
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Administración Global — CapacitaPro
+          Administración — {SOLUTION_ACADEMY.name}
         </h1>
         <p className="text-sm text-muted-foreground">
-          Creá empresas clientes, usuarios (Instructores, Alumnos y RRHH) y asigná licencias de cursos.
+          Gestioná el equipo docente, alumnos, cursos y convenios corporativos de{" "}
+          {SOLUTION_ACADEMY.name}.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: "Empresas Clientes", value: companyList.length, icon: Building2 },
-          { label: "Usuarios Totales", value: allUsers.length, icon: Users },
+          { label: "Instructores Activos", value: instructorCount, icon: GraduationCap },
+          { label: "Alumnos Registrados", value: studentCount, icon: Users },
           { label: "Cursos en Catálogo", value: courseList.length, icon: BookOpen },
           { label: "Certificados Emitidos", value: totalCerts ?? 0, icon: Award },
         ].map((stat) => (
@@ -60,13 +69,17 @@ export default async function SuperAdminCompaniesPage() {
       </div>
 
       <SuperAdminCompanyTools
+        defaultCompanyId={mainAcademy?.id ?? ""}
         companies={companyList.map((c) => ({ id: c.id, name: c.name }))}
         courses={courseList}
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>Usuarios de la Plataforma ({allUsers.length})</CardTitle>
+          <CardTitle>Equipo y Alumnos de {SOLUTION_ACADEMY.name} ({allUsers.length})</CardTitle>
+          <CardDescription>
+            Listado general de cuentas habilitadas en el Campus Virtual (el auto-registro público está deshabilitado).
+          </CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -74,13 +87,17 @@ export default async function SuperAdminCompaniesPage() {
               <tr>
                 <th className="py-3 pr-4">Usuario</th>
                 <th className="py-3 pr-4">Rol</th>
-                <th className="py-3 pr-4">Empresa</th>
+                <th className="py-3 pr-4">Sede / Convenio</th>
                 <th className="py-3">Estado</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {allUsers.map((u) => {
                 const comp = Array.isArray(u.company) ? u.company[0] : u.company;
+                const orgLabel =
+                  !comp?.name || isMainAcademyOrganization(comp.name)
+                    ? SOLUTION_ACADEMY.name
+                    : `Convenio: ${comp.name}`;
                 return (
                   <tr key={u.id}>
                     <td className="py-3 pr-4">
@@ -90,7 +107,7 @@ export default async function SuperAdminCompaniesPage() {
                     <td className="py-3 pr-4">
                       <Badge variant="outline">{getRoleLabel(u.role as UserRole)}</Badge>
                     </td>
-                    <td className="py-3 pr-4 text-xs">{comp?.name ?? "Global"}</td>
+                    <td className="py-3 pr-4 text-xs">{orgLabel}</td>
                     <td className="py-3">
                       <Badge variant={u.is_active ? "success" : "secondary"}>
                         {u.is_active ? "Activo" : "Inactivo"}
@@ -104,39 +121,42 @@ export default async function SuperAdminCompaniesPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Empresas Registradas</CardTitle>
-        </CardHeader>
-        <CardContent className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-border text-xs uppercase text-muted-foreground">
-              <tr>
-                <th className="py-3 pr-4">Empresa</th>
-                <th className="py-3 pr-4">Slug</th>
-                <th className="py-3 pr-4">CUIT/RUT</th>
-                <th className="py-3 pr-4">Asientos</th>
-                <th className="py-3">Estado</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {companyList.map((c) => (
-                <tr key={c.id}>
-                  <td className="py-3 pr-4 font-semibold">{c.name}</td>
-                  <td className="py-3 pr-4 font-mono text-xs">{c.slug}</td>
-                  <td className="py-3 pr-4 text-xs">{c.tax_id ?? "—"}</td>
-                  <td className="py-3 pr-4 text-xs">{c.max_seats}</td>
-                  <td className="py-3">
-                    <Badge variant={c.is_active ? "success" : "secondary"}>
-                      {c.is_active ? "Activa" : "Suspendida"}
-                    </Badge>
-                  </td>
+      {corporateAgreements.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Empresas con Convenio Corporativo ({corporateAgreements.length})</CardTitle>
+            <CardDescription>
+              Organizaciones que capacitan a su personal mediante convenios con {SOLUTION_ACADEMY.name}.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-border text-xs uppercase text-muted-foreground">
+                <tr>
+                  <th className="py-3 pr-4">Empresa en Convenio</th>
+                  <th className="py-3 pr-4">CUIT / RUT</th>
+                  <th className="py-3 pr-4">Cupo Máximo</th>
+                  <th className="py-3">Estado</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {corporateAgreements.map((c) => (
+                  <tr key={c.id}>
+                    <td className="py-3 pr-4 font-semibold">{c.name}</td>
+                    <td className="py-3 pr-4 text-xs">{c.tax_id ?? "—"}</td>
+                    <td className="py-3 pr-4 text-xs">{c.max_seats} cupos</td>
+                    <td className="py-3">
+                      <Badge variant={c.is_active ? "success" : "secondary"}>
+                        {c.is_active ? "Vigente" : "Pausado"}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

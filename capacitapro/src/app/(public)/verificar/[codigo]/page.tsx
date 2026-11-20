@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
+import { SOLUTION_ACADEMY, isMainAcademyOrganization } from "@/lib/solution-academy";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,11 +44,11 @@ export async function generateMetadata({
   const { codigo } = await params;
   const cert = await fetchPublicCertificate(codigo);
   if (!cert) {
-    return { title: "Certificado no encontrado | CapacitaPro" };
+    return { title: `Certificado no encontrado | ${SOLUTION_ACADEMY.name}` };
   }
   return {
-    title: `Diploma Verificado: ${cert.student_name} — ${cert.course_title} | CapacitaPro`,
-    description: `Certificado N.° ${cert.certificate_number} emitido por Solution Academy / CapacitaPro para ${cert.student_name} (${cert.company_name}).`,
+    title: `Diploma Verificado: ${cert.student_name} — ${cert.course_title} | ${SOLUTION_ACADEMY.name}`,
+    description: `Certificado oficial N.° ${cert.certificate_number} emitido por ${SOLUTION_ACADEMY.name} para ${cert.student_name}.`,
   };
 }
 
@@ -63,8 +64,14 @@ export default async function VerifyCertificatePage({
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-2xl space-y-6">
         <div className="text-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={SOLUTION_ACADEMY.logoPath}
+            alt={SOLUTION_ACADEMY.name}
+            className="mx-auto mb-3 h-14 w-14 rounded-xl border border-border object-cover shadow-sm"
+          />
           <span className="text-xs font-bold uppercase tracking-widest text-primary">
-            Solution Academy • CapacitaPro • Registro Público
+            {SOLUTION_ACADEMY.name} • Registro Oficial de Certificados
           </span>
           <h1 className="mt-1 text-3xl font-extrabold">Verificación de Certificado</h1>
         </div>
@@ -76,7 +83,7 @@ export default async function VerifyCertificatePage({
               <h2 className="text-xl font-bold">Certificado no encontrado</h2>
               <p className="max-w-md text-sm text-muted-foreground">
                 El código <code className="rounded bg-secondary px-1.5 py-0.5">{codigo}</code> no
-                corresponde a ningún diploma válido emitido en CapacitaPro.
+                corresponde a ningún diploma válido emitido por {SOLUTION_ACADEMY.name}.
               </p>
               <div className="mt-2 flex gap-2">
                 <Link href="/verificar">
@@ -138,8 +145,12 @@ export default async function VerifyCertificatePage({
                 <div className="flex items-start gap-2.5 rounded-lg bg-secondary/50 p-3">
                   <Building2 className="mt-0.5 h-4 w-4 text-primary" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Empresa / Organización</p>
-                    <p className="text-sm font-semibold">{cert.company_name}</p>
+                    <p className="text-xs text-muted-foreground">Institución Emisora</p>
+                    <p className="text-sm font-semibold">
+                      {isMainAcademyOrganization(cert.company_name)
+                        ? SOLUTION_ACADEMY.name
+                        : `${SOLUTION_ACADEMY.name} (Convenio ${cert.company_name})`}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2.5 rounded-lg bg-secondary/50 p-3">

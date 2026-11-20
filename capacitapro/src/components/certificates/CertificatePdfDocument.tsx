@@ -1,5 +1,6 @@
 import React from "react";
 import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { isMainAcademyOrganization } from "@/lib/solution-academy";
 
 const styles = StyleSheet.create({
   page: {
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1.5,
     borderColor: "#0D5BD9",
-    padding: 32,
+    padding: 30,
     justifyContent: "space-between",
   },
   header: {
@@ -29,20 +30,30 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E2E8F0",
     paddingBottom: 14,
   },
+  brandRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  logoImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 6,
+  },
   brandBlock: {
     flexDirection: "column",
   },
   brand: {
-    fontSize: 22,
+    fontSize: 21,
     fontWeight: "bold",
     color: "#0D1B2A",
-    letterSpacing: 1.5,
+    letterSpacing: 1.4,
   },
   brandSub: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: "#0D5BD9",
     marginTop: 3,
-    letterSpacing: 2.2,
+    letterSpacing: 2.0,
   },
   sealBox: {
     backgroundColor: "#EFF6FF",
@@ -67,7 +78,7 @@ const styles = StyleSheet.create({
   },
   body: {
     alignItems: "center",
-    marginVertical: 18,
+    marginVertical: 16,
   },
   eyebrow: {
     fontSize: 11,
@@ -128,7 +139,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   signatureBox: {
-    width: 240,
+    width: 250,
   },
   signatureLine: {
     borderBottomWidth: 1,
@@ -187,32 +198,46 @@ export interface CertificatePdfProps {
   issuedAtFormatted: string;
   verificationUrl: string;
   qrDataUrl: string;
+  logoDataUrl?: string | null;
 }
 
 export function CertificatePdfDocument(props: CertificatePdfProps) {
+  const showAgreementPrefix =
+    Boolean(props.companyName) && !isMainAcademyOrganization(props.companyName);
+
   return (
-    <Document title={`Certificado ${props.certificateNumber} - ${props.studentName}`}>
+    <Document
+      title={`Certificado Solution Academy ${props.certificateNumber} - ${props.studentName}`}
+    >
       <Page size="A4" orientation="landscape" style={styles.page}>
         <View style={styles.outerFrame}>
           <View style={styles.innerFrame}>
             <View style={styles.header}>
-              <View style={styles.brandBlock}>
-                <Text style={styles.brand}>CAPACITAPRO</Text>
-                <Text style={styles.brandSub}>SOLUTION ACADEMY • CAPACITAMOS • INSPIRAMOS • TRANSFORMAMOS</Text>
+              <View style={styles.brandRow}>
+                {props.logoDataUrl ? (
+                  // eslint-disable-next-line jsx-a11y/alt-text
+                  <Image src={props.logoDataUrl} style={styles.logoImage} />
+                ) : null}
+                <View style={styles.brandBlock}>
+                  <Text style={styles.brand}>SOLUTION ACADEMY</Text>
+                  <Text style={styles.brandSub}>CAPACITAMOS • INSPIRAMOS • TRANSFORMAMOS</Text>
+                </View>
               </View>
               <View style={styles.sealBox}>
-                <Text style={styles.sealLabel}>CERTIFICADO VERIFICABLE</Text>
+                <Text style={styles.sealLabel}>CERTIFICADO OFICIAL</Text>
                 <Text style={styles.certNumber}>N.° {props.certificateNumber}</Text>
               </View>
             </View>
 
             <View style={styles.body}>
-              <Text style={styles.eyebrow}>DIPLOMA DE APROBACIÓN TÉCNICA</Text>
-              <Text style={styles.subtitle}>Se certifica por la presente que</Text>
+              <Text style={styles.eyebrow}>DIPLOMA DE FORMACIÓN TÉCNICA</Text>
+              <Text style={styles.subtitle}>Solution Academy certifica por la presente que</Text>
               <Text style={styles.studentName}>{props.studentName}</Text>
               <View style={styles.divider} />
               <Text style={styles.subtitle}>
-                Integrante de {props.companyName}, completó y aprobó satisfactoriamente el programa de capacitación:
+                {showAgreementPrefix
+                  ? `En el marco del convenio con ${props.companyName}, completó y aprobó satisfactoriamente el programa:`
+                  : "completó y aprobó satisfactoriamente el programa de capacitación técnica:"}
               </Text>
               <Text style={styles.courseTitle}>{props.courseTitle}</Text>
               <View style={styles.metaRow}>
@@ -228,16 +253,16 @@ export function CertificatePdfDocument(props: CertificatePdfProps) {
               <View style={styles.signatureBox}>
                 <View style={styles.signatureLine} />
                 <Text style={styles.signatureName}>{props.instructorName}</Text>
-                <Text style={styles.signatureRole}>Dirección Académica • Solution Academy / CapacitaPro</Text>
+                <Text style={styles.signatureRole}>Dirección Académica • Solution Academy</Text>
               </View>
 
               <View style={styles.qrBox}>
                 {/* eslint-disable-next-line jsx-a11y/alt-text */}
                 <Image src={props.qrDataUrl} style={styles.qrImage} />
                 <View style={styles.qrTextBlock}>
-                  <Text style={styles.qrTitle}>Validación Pública Instantánea</Text>
+                  <Text style={styles.qrTitle}>Validación Pública Oficial</Text>
                   <Text style={styles.qrText}>
-                    Escaneá este código QR o ingresá al enlace para confirmar autenticidad y vigencia:
+                    Escaneá este código QR o ingresá al enlace para comprobar autenticidad y vigencia:
                   </Text>
                   <Text style={styles.qrText}>{props.verificationUrl}</Text>
                 </View>

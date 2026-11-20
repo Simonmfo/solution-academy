@@ -33,7 +33,7 @@ export async function GET() {
     headers: {
       "Content-Type":
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "Content-Disposition": 'attachment; filename="Plantilla-Importacion-CapacitaPro.xlsx"',
+      "Content-Disposition": 'attachment; filename="Plantilla-Alumnos-SolutionAcademy.xlsx"',
     },
   });
 }

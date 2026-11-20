@@ -11,6 +11,7 @@ import {
   gradeAssignmentSubmissionAction,
 } from "@/actions/course.actions";
 import { gradeOpenQuizAnswerAction } from "@/actions/quiz.actions";
+import { SOLUTION_ACADEMY, SOLUTION_ACADEMY_CATEGORIES } from "@/lib/solution-academy";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -56,9 +57,10 @@ export function CreateCourseForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Nuevo Curso Académico</CardTitle>
+        <CardTitle>Nuevo Curso de {SOLUTION_ACADEMY.name}</CardTitle>
         <CardDescription>
-          Creá el curso y automáticamente se generará su banco de preguntas asociado.
+          Creá el curso con su banco de preguntas asociado. Al publicarse, se muestra
+          automáticamente en la página principal de {SOLUTION_ACADEMY.name}.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -82,8 +84,18 @@ export function CreateCourseForm() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Categoría</Label>
-            <Input value={category} onChange={(e) => setCategory(e.target.value)} />
+            <Label>Área / Categoría en Solution Academy</Label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+            >
+              {SOLUTION_ACADEMY_CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="space-y-1.5">
             <Label>Nivel</Label>

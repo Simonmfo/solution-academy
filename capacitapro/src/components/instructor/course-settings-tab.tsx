@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Award, CheckCircle2, Loader2, Lock, Save, ShieldCheck } from "lucide-react";
 import { updateCourseAction } from "@/actions/course.actions";
+import { SOLUTION_ACADEMY, SOLUTION_ACADEMY_CATEGORIES } from "@/lib/solution-academy";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -153,7 +154,10 @@ export function CourseSettingsTab({ course }: { course: Course }) {
       <Card>
         <CardHeader>
           <CardTitle>Información General del Curso</CardTitle>
-          <CardDescription>Datos visibles para alumnos, RRHH y diplomas emitidos.</CardDescription>
+          <CardDescription>
+            Datos visibles en el Campus Virtual, en la web pública de {SOLUTION_ACADEMY.name} y en
+            los diplomas oficiales emitidos.
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="space-y-1.5 md:col-span-2">
@@ -187,13 +191,22 @@ export function CourseSettingsTab({ course }: { course: Course }) {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="course-cat">Categoría</Label>
-            <Input
+            <Label htmlFor="course-cat">Área / Categoría en {SOLUTION_ACADEMY.name}</Label>
+            <select
               id="course-cat"
-              required
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-            />
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+            >
+              {!SOLUTION_ACADEMY_CATEGORIES.some((c) => c.value === category) && category && (
+                <option value={category}>{category}</option>
+              )}
+              {SOLUTION_ACADEMY_CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="space-y-1.5">
@@ -218,8 +231,8 @@ export function CourseSettingsTab({ course }: { course: Course }) {
               onChange={(e) => setStatus(e.target.value as CourseStatus)}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
             >
-              <option value="draft">Borrador (Oculto)</option>
-              <option value="published">Publicado (Activo)</option>
+              <option value="draft">Borrador (Oculto en la web y Campus)</option>
+              <option value="published">Publicado (Visible en la web de Solution Academy)</option>
               <option value="archived">Archivado</option>
             </select>
           </div>

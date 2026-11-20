@@ -3,9 +3,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CapacitaPro | LMS Empresarial — Solution Academy",
+  title: "Solution Academy | Campus Virtual Oficial",
   description:
-    "Plataforma de formación técnica y corporativa multi-empresa con evaluaciones avanzadas, modo focus, gamificación y diplomas verificables con QR.",
+    "Campus Virtual oficial de Solution Academy. Formación técnica en Operación de Maquinaria Pesada, Construcción y Oficios, Soldadura e Industria con diplomas verificables por QR.",
 };
 
 export default function RootLayout({

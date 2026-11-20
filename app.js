@@ -310,13 +310,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const highlights = [
       apiCourse.is_sequential
-        ? 'Avance guiado por módulos correlativos en CapacitaPro'
+        ? 'Avance guiado por módulos correlativos en el Campus Virtual'
         : 'Acceso flexible a todos los módulos en el Campus Virtual',
       apiCourse.total_lessons > 0
         ? `${modules.length} módulo(s) • ${apiCourse.total_lessons} clase(s) y evaluaciones`
         : 'Material técnico digital y prácticas reales presenciales',
       apiCourse.certificate_enabled
-        ? `Certificado PDF verificable con QR (aprobación ≥ ${apiCourse.passing_score}%)`
+        ? `Certificado oficial PDF con QR (aprobación ≥ ${apiCourse.passing_score}%)`
         : `Evaluación técnica con nota mínima de ${apiCourse.passing_score}%`
     ];
 
@@ -328,12 +328,12 @@ document.addEventListener('DOMContentLoaded', () => {
       categoryLabel: apiCourse.category || 'Formación Técnica',
       icon: pickCategoryIcon(categoryKey, apiCourse.title),
       duration: `${apiCourse.estimated_hours || 8} hs certificadas`,
-      modality: 'Presencial + Campus CapacitaPro',
+      modality: 'Presencial + Campus Virtual',
       badge: levelToLabel(apiCourse.level),
       shortDesc:
         apiCourse.short_description ||
         apiCourse.description ||
-        'Capacitación técnica certificada dictada por Solution Academy en CapacitaPro.',
+        'Capacitación técnica certificada dictada por Solution Academy.',
       highlights,
       syllabus,
       career:
@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCountsAndCourseSelect();
         renderCourses();
         if (syncBadge) {
-          syncBadge.textContent = `SINCRONIZADO CON CAPACITAPRO (${COURSES_DATA.length} CURSOS ACTIVOS)`;
+          syncBadge.textContent = `CATÁLOGO CAMPUS EN VIVO (${COURSES_DATA.length} CURSOS ACTIVOS)`;
         }
       }
     } catch {
@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
       : {
           title: 'Capacitación Técnica Certificada',
           courseValue: '',
-          desc: 'Consultanos por los cursos disponibles en el Campus Virtual CapacitaPro.',
+          desc: 'Consultanos por los cursos disponibles en el Campus Virtual de Solution Academy.',
           meta: ['🎓 Certificación Oficial']
         };
 

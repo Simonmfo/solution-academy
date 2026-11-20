@@ -481,7 +481,7 @@ export async function startQuizAttemptAction(input: {
 > {
   const { profile } = await getCurrentUserWithProfile();
   if (!profile || !profile.company_id) {
-    return { success: false, error: "Debés iniciar sesión con una cuenta corporativa activa." };
+    return { success: false, error: "Debés iniciar sesión con una cuenta activa de Solution Academy." };
   }
 
   const admin = createAdminClient();
