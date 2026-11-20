@@ -7,8 +7,8 @@ const ACADEMY_CONFIG = {
   // Configure WhatsApp phone number here (international format without '+').
   // If left empty, clicking WhatsApp buttons smoothly scrolls and pre-fills the inscription form.
   whatsappNumber: '',
-  // URL de despliegue de CapacitaPro LMS (ej. https://campus.solutionacademy.com/login o tu dominio Vercel)
-  lmsLoginUrl: 'http://localhost:3000/login'
+  // URL de despliegue de CapacitaPro LMS en producción
+  lmsLoginUrl: 'https://capacitapro-solutionacademy.vercel.app/login'
 };
 
 const COURSES_DATA = [
