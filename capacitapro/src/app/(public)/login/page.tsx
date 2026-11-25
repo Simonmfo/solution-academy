@@ -4,7 +4,7 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Loader2, Lock, Mail } from "lucide-react";
+import { ArrowRight, Check, Copy, Loader2, Lock, Mail } from "lucide-react";
 import { loginSchema, type LoginInput } from "@/lib/validations/schemas";
 import { loginAction } from "@/actions/auth.actions";
 import { SOLUTION_ACADEMY } from "@/lib/solution-academy";
@@ -13,18 +13,41 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+const DEMO_PASSWORD = "CapacitaPro2026!";
+
+const DEMO_ACCOUNTS = [
+  { role: "Dirección / Admin", email: "superadmin@capacitapro.demo" },
+  { role: "Instructor", email: "instructor@capacitapro.demo" },
+  { role: "Alumno", email: "alumno@capacitapro.demo" },
+  { role: "Coord. Convenio", email: "rrhh@capacitapro.demo" },
+] as const;
+
 function LoginFormInner() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/dashboard";
   const [serverError, setServerError] = React.useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = React.useState<string | null>(null);
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
   });
+
+  const handleCopy = (key: string, value: string) => {
+    void navigator.clipboard.writeText(value);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 1800);
+  };
+
+  const handleFillAccount = (email: string) => {
+    setValue("email", email, { shouldValidate: true });
+    setValue("password", DEMO_PASSWORD, { shouldValidate: true });
+    setServerError(null);
+  };
 
   const onSubmit = async (values: LoginInput) => {
     setServerError(null);
@@ -104,6 +127,62 @@ function LoginFormInner() {
               </>
             )}
           </Button>
+
+          <div className="space-y-2 rounded-lg border border-border bg-secondary/50 p-3 text-xs">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-semibold text-foreground">Accesos de Prueba</p>
+              <button
+                type="button"
+                onClick={() => handleCopy("pass", DEMO_PASSWORD)}
+                className="inline-flex items-center gap-1 rounded border border-border bg-background px-2 py-0.5 font-mono text-[11px] text-foreground hover:bg-accent"
+                title="Copiar contraseña"
+              >
+                Clave: {DEMO_PASSWORD}
+                {copiedKey === "pass" ? (
+                  <Check className="h-3 w-3 text-emerald-600" />
+                ) : (
+                  <Copy className="h-3 w-3 text-muted-foreground" />
+                )}
+              </button>
+            </div>
+
+            <div className="space-y-1.5">
+              {DEMO_ACCOUNTS.map((acc) => (
+                <div
+                  key={acc.email}
+                  className="flex items-center justify-between gap-2 rounded-md border border-border/70 bg-background/80 px-2.5 py-1.5"
+                >
+                  <div className="min-w-0">
+                    <p className="font-semibold text-foreground">{acc.role}</p>
+                    <code className="block truncate text-[11px] text-muted-foreground select-all">
+                      {acc.email}
+                    </code>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(acc.email, acc.email)}
+                      className="rounded border border-border p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
+                      title="Copiar correo"
+                    >
+                      {copiedKey === acc.email ? (
+                        <Check className="h-3.5 w-3.5 text-emerald-600" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleFillAccount(acc.email)}
+                      className="rounded bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary hover:bg-primary/20"
+                    >
+                      Usar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
           <p className="text-center text-xs text-muted-foreground">
             Acceso exclusivo para alumnos, instructores y equipo de{" "}
